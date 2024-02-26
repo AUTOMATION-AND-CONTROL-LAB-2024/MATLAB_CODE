@@ -1,2 +1,2 @@
-# MATLAB_CODE
-Matlab code for the Automation and Control Lab 2024
+# AUTOMATION_LAB_PROJECT
+Project folder for the Automation and Control Lab 2024
