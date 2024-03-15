@@ -1,0 +1,2 @@
+motor datasheet and drone struture: https://holybro.com/products/s500-v2-kit
+px4 guide: https://docs.px4.io/main/en/config/flight_controller_orientation.html 
