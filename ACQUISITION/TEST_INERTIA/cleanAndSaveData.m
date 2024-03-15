@@ -1,8 +1,8 @@
 function cleanAndSaveData(filename, colNames, window_size)
     % Load raw data
     raw_data = load(filename);
-    raw_data = raw_data.data;
-    dataset = table2array(raw_data);
+    raw_data = raw_data.Acq_Data;
+   dataset = table2array(raw_data);
     %% dataset = table2array(dataset);
     % Find the indices of the first and last non-zero values
     nonzero_indices = find(dataset(:, 2) ~= 0);
