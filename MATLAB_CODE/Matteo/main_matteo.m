@@ -42,11 +42,20 @@ invJ = inv(J);
 
 %% Simulation of the model with random parameters
 Ts_slk      =       0.01;              % sampling time (s)
-Tend_slk    =       10;                % final time (s)
-
-%% 
+Tend_slk    =       10;                % final time (s) 
 
 %% Initial conditions (which correspond to the equilibrium conditions)
 x_eq          = [0;0;0;0;0;0];          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
 % tau_m_eq      = [1;1;1;1];              % Input Equilibrium - Motor Torque
 w_eq          = [1000;1200;1400;2000];  % Control Input Equilibrium - Propellers' Angular Velocities
+
+%% Linearized Model (Inverse Dynamic)
+A = [zeros(3,3),    eye(3);
+     zeros(3,3),    zeros(3,3);];
+B = [zeros(3,3);
+     eye(3);];
+Mo = ctrb(A,B);
+rankMo = rank(Mo);  % ok, it is controllable
+system_poles = eig(A);
+poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
+[Kpole ,prec]= place(A,B,poles);
