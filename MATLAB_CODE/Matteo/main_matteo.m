@@ -27,7 +27,7 @@ Ts_slk      =       0.01;              % sampling time (s)
 Tend_slk    =       10;                % final time (s) 
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x_eq          = [1;1;2;0;0;0]*(-pi/2+0.001);          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
+x_eq          = [1;1;1;0;0;0]*(-pi/4+0.001);          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
 % tau_m_eq      = [1;1;1;1];              % Input Equilibrium - Motor Torque
 w_eq          = [1000;1200;1400;2000];  % Control Input Equilibrium - Propellers' Angular Velocities
 
@@ -72,9 +72,10 @@ mf_variance     = 0.1;  % variance in IMU magnetic field measurement
 %% EKF parameters
 Ts_EKF_integr      = 0.01;     % [s] Ts for the ODE integration 
 Ts_EKF_meas        = 0.05;     % [s] Ts for measurement update
+% oss: Ts_EKF_meas must be a multiple of Ts_EKF_integr, example: Ts_EKF_meas = 2 * Ts_EKF_integr
 
-q_angle     = 1;        % q-elements related to phi,theta,yaw states
-q_bias_w    = 1;        % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
+q_angle     = 0.8;        % q-elements related to phi,theta,yaw states
+q_bias_w    = 0.8;        % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q           = diag([q_angle,q_angle,q_angle, q_bias_w,q_bias_w,q_bias_w]);
 
 r_ph_meas   = 0.1;    % variance related to phi computation from IMU measurement
@@ -82,12 +83,12 @@ r_th_meas   = 0.1;    % variance related to theta computation from IMU measureme
 r_ps_meas   = 0.1;    % variance related to psi computation from IMU measurement
 R           = diag([r_th_meas,r_th_meas,r_ps_meas]);
 
-ph0         = 0;    % initial guess of phi angle
-th0         = 0;    % initial guess of theta angle
-ps0         = 0;    % initial guess of psi angle
+ph0         = -pi/4;    % initial guess of phi angle
+th0         = -pi/4;    % initial guess of theta angle
+ps0         = -pi/4;    % initial guess of psi angle
 bias_wp     = 0.1;  % initial guess of bias in p direction (of vector w angular velocity) can be estimated with measurements
 bias_wq     = 0.1;  % initial guess of bias in q direction (of vector w angular velocity) can be estimated with measurements
 bias_wr     = 0.1;  % initial guess of bias in r direction (of vector w angular velocity) can be estimated with measurements
-x0          = [ph0;th0;ps0;bias_wp;bias_wq;bias_wr];
+x0EKF       = [ph0;th0;ps0;bias_wp;bias_wq;bias_wr];
 
-P0          = 0.1*eye(6);
+P0          = 0.8*eye(6);
