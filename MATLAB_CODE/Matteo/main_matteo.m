@@ -22,14 +22,6 @@ param       =       [Ixx;Iyy;Izz;l;k;b;m];
 % sth         =       sin(theta);
 % sps         =       sin(psi);
 
-%% IMU parameters
-a_bias          = 0.1;  % bias in IMU linear acceleration measurement
-a_variance      = 0.1;  % variance in IMU linear acceleration measurement
-w_bias          = 0.1;  % bias in IMU angular velocity measurement
-w_variance      = 0.1;  % variance in IMU angular velocity measurement
-mf_bias         = 0.1;  % bias in IMU magnetic field measurement
-mf_variance     = 0.1;  % variance in IMU magnetic field measurement 
-
 %% Simulation of the model with random parameters
 Ts_slk      =       0.01;              % sampling time (s)
 Tend_slk    =       10;                % final time (s) 
@@ -39,7 +31,7 @@ x_eq          = [1;1;2;0;0;0]*(-pi/2+0.001);          % State Equilibrium Vector
 % tau_m_eq      = [1;1;1;1];              % Input Equilibrium - Motor Torque
 w_eq          = [1000;1200;1400;2000];  % Control Input Equilibrium - Propellers' Angular Velocities
 
-%% compute the inversion of matrix H: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = H * (u1,u2,u3,u4)'
+%% compute the inversion of matrix Mu: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = Mu * (u1,u2,u3,u4)'
 syms k l b
 A = [k      k       k       k;
      0      0       l*k     -l*k;
@@ -69,18 +61,26 @@ system_poles = eig(A);
 poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 [Kpole ,prec]= place(A,B,poles);
 
+%% IMU parameters
+a_bias          = 0.1;  % bias in IMU linear acceleration measurement
+a_variance      = 0.1;  % variance in IMU linear acceleration measurement
+w_bias          = 0.1;  % bias in IMU angular velocity measurement
+w_variance      = 0.1;  % variance in IMU angular velocity measurement
+mf_bias         = 0.1;  % bias in IMU magnetic field measurement
+mf_variance     = 0.1;  % variance in IMU magnetic field measurement 
+
 %% EKF parameters
 Ts_EKF_integr      = 0.01;     % [s] Ts for the ODE integration 
 Ts_EKF_meas        = 0.05;     % [s] Ts for measurement update
 
 q_angle     = 1;        % q-elements related to phi,theta,yaw states
-q_bias_w    = 1;        % q-elements related to bias_wp, bias_wq, bias_wr (bias of p,q,r of angular velocity vector)
-Q           = diag(q_angle,q_angle,q_angle, q_bias_w,q_bias_w,q_bias_w);
+q_bias_w    = 1;        % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
+Q           = diag([q_angle,q_angle,q_angle, q_bias_w,q_bias_w,q_bias_w]);
 
 r_ph_meas   = 0.1;    % variance related to phi computation from IMU measurement
 r_th_meas   = 0.1;    % variance related to theta computation from IMU measurement
 r_ps_meas   = 0.1;    % variance related to psi computation from IMU measurement
-R           = diag(r_th_meas,r_th_meas,r_ps_meas);
+R           = diag([r_th_meas,r_th_meas,r_ps_meas]);
 
 ph0         = 0;    % initial guess of phi angle
 th0         = 0;    % initial guess of theta angle
