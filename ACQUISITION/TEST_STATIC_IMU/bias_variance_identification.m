@@ -3,8 +3,9 @@ clear all
 close all
 clc
 %% extract static measurements from raw_data
-raw_data = load("Test_Noise_Magnetometer_Acq_1.mat");
+raw_data = load("RAW_DATA/Test_Noise_Magnetometer_Acq_1.mat");
 dataset = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
+clear raw_data;
 [rows,colums] = size(dataset);
 Ts = 0.01;  % sampling time of IMU
 
@@ -72,6 +73,11 @@ plot(dataset(:,1),IMU_mf_b(:,2));
 figure(3)
 plot(dataset(:,1),IMU_mf_b(:,3));
 
+%% extract RPY
+IMU_RPY_meas = zeros(rows,3);   % IMU_RPY_meas(1,:) = phi(:), IMU_RPY_meas(2,:) = theta(:), IMU_RPY_meas(3,:) = psi(:)
+for i = 1:1:rows
+    IMU_RPY_meas(i,:) = RPY_computation(a_b(i,:)',mf_b(i,:)',mf)';
+end
 %% Table 
 ColumnsName = {'IMU_a_b_var', 'IMU_w_b_mean', 'IMU_w_b_var', 'IMU_mf_b_var'};
 IMU_var_bias = array2table([IMU_a_b_var, IMU_w_b_mean, IMU_w_b_var, IMU_mf_b_var],'VariableNames', ColumnsName);

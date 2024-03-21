@@ -78,7 +78,7 @@ Ts_EKF_meas        = 0.05;     % [s] Ts for measurement update
 % --------------------------------------------------------------------------------------------------------
 
 q_angle     = 0.5;       % q-elements related to phi,theta,yaw states
-q_bias_w_b  = 20;       % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
+q_bias_w_b  = 0.01;       % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q           = diag([q_angle,q_angle,q_angle, q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
 r_ph_meas   = 0.1;    % variance related to phi computation from IMU measurement
