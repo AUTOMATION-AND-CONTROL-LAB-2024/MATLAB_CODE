@@ -24,7 +24,7 @@ for i = 1:1:size(dataset,1)
     end
 end
 dataset = dataset(1:i-1,:);
-
+[rows,colums] = size(dataset);
 %% extract linear accelerations (a_b) (6,7,8 columns)
 IMU_a_b = dataset(:,6:8);
 IMU_a_b_mean = zeros(3,1);  % column vector
@@ -74,9 +74,16 @@ figure(3)
 plot(dataset(:,1),IMU_mf_b(:,3));
 
 %% extract RPY
-IMU_RPY_meas = zeros(rows,3);   % IMU_RPY_meas(1,:) = phi(:), IMU_RPY_meas(2,:) = theta(:), IMU_RPY_meas(3,:) = psi(:)
+mf           = [22602; 0; -42062;];    % earth magnetic field (in inertia frame)
+IMU_RPY_meas = zeros(rows,3);          % IMU_RPY_meas(1,:) = phi(:), IMU_RPY_meas(2,:) = theta(:), IMU_RPY_meas(3,:) = psi(:)
+IMU_RPY_mean = zeros(3,1);
+IMU_RPY_var  = zeros(3,1);
 for i = 1:1:rows
-    IMU_RPY_meas(i,:) = RPY_computation(a_b(i,:)',mf_b(i,:)',mf)';
+    IMU_RPY_meas(i,:) = RPY_computation(IMU_a_b(i,:)',IMU_mf_b(i,:)',mf)';  % trigonometric RPY computation 
+end
+for i = 1:1:3
+    IMU_RPY_mean(i,1) = mean(IMU_RPY_meas(:,i));
+    IMU_RPY_var(i,1) = var(IMU_RPY_meas(:,i));
 end
 %% Table 
 ColumnsName = {'IMU_a_b_var', 'IMU_w_b_mean', 'IMU_w_b_var', 'IMU_mf_b_var'};

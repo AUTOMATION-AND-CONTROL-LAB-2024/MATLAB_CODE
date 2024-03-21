@@ -1,6 +1,6 @@
 
 function [RPY_meas,method_ps]   = RPY_computation(a_b,mf_b,mf)
-% description:
+% description: 
 % - a_b             = measured linear acceleration in body-frame
 % - w_b             = measured angular velocity in body-frame
 % - mf_b            = measured magnetic field in body-frame
@@ -28,7 +28,7 @@ sth = sin(th_meas);
 cth = cos(th_meas);
 
 % psi computation
-if abs(sin(th_meas)) > 0.01  % sin(th) != 0 
+if abs(sin(th_meas)) > 0.1  % sin(th) != 0 
     method_ps = 1;
     ps_meas_numerator   = (sth*cph*mf_b(2) - sth*sph*mf_b(3))/(-sth);       % don't modify
     ps_meas_denominator = (-sph*mf_b(2) - cph*mf_b(3) + cth*mf_u)/(-sth);   % don't modify

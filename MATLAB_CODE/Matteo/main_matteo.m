@@ -4,15 +4,15 @@ close all
 clc
 
 %% Model parameters 
-g           =       9.81;               %  gravity acceleration (m/s^2)
-mf          =       [22602; 0; -42062;]; %  earth magnetic field (in inertia frame)
-Ixx         =       4.856e-3;           %  moment of inertia
-Iyy         =       4.856e-3;           %  moment of inertia (kg*m^2)
-Izz         =       8.801e-3;           %  moment of inertia (kg*m^2)
+g           =       9.81;                   %  gravity acceleration (m/s^2)
+mf          =       [22602; 0; -42062;];    % earth magnetic field (in inertia frame)
+Ixx         =       4.856e-3;               %  moment of inertia
+Iyy         =       4.856e-3;               %  moment of inertia (kg*m^2)
+Izz         =       8.801e-3;               %  moment of inertia (kg*m^2)
 l           =       0.225;
 k           =       2.98e-7;
 b           =       1.14e-7;
-m           =       0.468;              %  mass (kg)
+m           =       0.468;                  %  mass (kg)
 param       =       [Ixx;Iyy;Izz;l;k;b;m];
  
 % cph         =       cos(phi);
