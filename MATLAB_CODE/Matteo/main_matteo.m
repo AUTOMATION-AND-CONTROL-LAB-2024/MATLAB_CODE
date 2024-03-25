@@ -60,7 +60,9 @@ poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 [Kpole ,prec]= place(A,B,poles);
 
 %% IMU parameters
-IMU_var_bias_matrix = table2array(IMU_var_bias);      % need IMU_var_bias table
+IMU_data = load("IMU_data.mat");
+IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
+clear IMU_data;
 %%
 IMU_a_b_bias          = ones(3,1)*0.1;                    % bias in IMU linear acceleration measurement     (THEORY)
 IMU_w_b_bias          = IMU_var_bias_matrix(:,2);         % bias in IMU angular velocity measurement 
