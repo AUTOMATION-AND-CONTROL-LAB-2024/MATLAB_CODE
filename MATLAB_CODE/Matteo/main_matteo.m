@@ -6,13 +6,13 @@ clc
 %% Model parameters 
 g           =       9.81;                   %  gravity acceleration (m/s^2)
 mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
-Ixx         =       4.856e-3;               %  moment of inertia (kg*m^2)
-Iyy         =       4.856e-3;               %  moment of inertia (kg*m^2)
-Izz         =       8.801e-3;               %  moment of inertia (kg*m^2)
-l           =       0.225;
-k           =       2.98e-7;
-b           =       1.14e-7;
-m           =       0.468;                  %  mass (kg)
+Ixx         =       0.015;                  %  moment of inertia (kg*m^2)
+Iyy         =       0.015;                  %  moment of inertia (kg*m^2)
+Izz         =       0.03;                   %  moment of inertia (kg*m^2)
+l           =       0.25;                   %  quadcopter arm (m)
+k           =       0.0022;                 %  lift constant
+b           =       1.14e-7;                %  drag constant
+m           =       0.61+0.064*4;           %  mass (kg)
 param       =       [Ixx;Iyy;Izz;l;k;b;m];
  
 % cph         =       cos(phi);
@@ -24,20 +24,20 @@ param       =       [Ixx;Iyy;Izz;l;k;b;m];
 
 %% Simulation of the model with random parameters
 Ts_slk      =       0.01;              % sampling time (s)
-Tend_slk    =       10;                % final time (s) 
+Tend_slk    =       400;               % simulation time (s) 
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [1;1;1;0;0;0]*(0.01);          % Initial State Vector - Roll, Pitch, Yaw angles and rates
+x0          = [1;1;1;0;0;0]*(0.01);    % Initial State Vector - Roll, Pitch, Yaw angles and rates
 
-%% compute the inversion of matrix Mu: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = Mu * (u1,u2,u3,u4)'
+%% compute the inversion of matrix Mtau_u: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = Mtau_u * (u1,u2,u3,u4)'
 syms k l b
-A = [k      k       k       k;
+Mtau_u = [k      k       k       k;
      0      0       l*k     -l*k;
      -l*k   l*k     0       0;
      -b     -b      b       b;];
-inv(A)
+inv(Mtau_u)
 
-%% compute the inversion matric of J
+%% compute the inversion matrix of J
 syms J11 J12 J13 J21 J22 J23 J31 J32 J33
 syms C11 C12 C13 C21 C22 C23 C31 C32 C33
 J = [J11 J12 J13;
