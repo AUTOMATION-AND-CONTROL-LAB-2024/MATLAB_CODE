@@ -5,8 +5,8 @@ clc
 
 %% Model parameters 
 g           =       9.81;                   %  gravity acceleration (m/s^2)
-mf          =       [22602; 0; -42062;];    % earth magnetic field (in inertia frame)
-Ixx         =       4.856e-3;               %  moment of inertia
+mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
+Ixx         =       4.856e-3;               %  moment of inertia (kg*m^2)
 Iyy         =       4.856e-3;               %  moment of inertia (kg*m^2)
 Izz         =       8.801e-3;               %  moment of inertia (kg*m^2)
 l           =       0.225;
@@ -27,7 +27,7 @@ Ts_slk      =       0.01;              % sampling time (s)
 Tend_slk    =       10;                % final time (s) 
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [1;1;1;0;0;0]*(-pi/4+0.001);          % Initial State Vector - Roll, Pitch, Yaw angles and rates
+x0          = [1;1;1;0;0;0]*(0.01);          % Initial State Vector - Roll, Pitch, Yaw angles and rates
 
 %% compute the inversion of matrix Mu: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = Mu * (u1,u2,u3,u4)'
 syms k l b
@@ -59,11 +59,14 @@ system_poles = eig(A);
 poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 [Kpole ,prec]= place(A,B,poles);
 
-%% IMU parameters
+%% PolePlacement Control
+load("K_pole.mat");
+
+%% IMU data loading
 IMU_data = load("IMU_data.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
 clear IMU_data;
-%%
+%% IMU data extraction
 IMU_a_b_bias          = ones(3,1)*0.1;                    % bias in IMU linear acceleration measurement     (THEORY)
 IMU_w_b_bias          = IMU_var_bias_matrix(:,2);         % bias in IMU angular velocity measurement 
 IMU_mf_b_bias         = ones(3,1)*0.1;                    % bias in IMU magnetic field measurement          (THEORY)
@@ -71,6 +74,17 @@ IMU_a_b_variance      = IMU_var_bias_matrix(:,1);         % variance in IMU line
 IMU_w_b_variance      = IMU_var_bias_matrix(:,3);         % variance in IMU angular velocity measurement
 IMU_mf_b_variance     = IMU_var_bias_matrix(:,4);         % variance in IMU magnetic field measurement 
 
+%% rotation from IMU-frame to BODY-frame
+angleZ = pi/4;
+Rbody_frd = [cos(angleZ) -sin(angleZ)   0;
+             sin(angleZ) cos(angleZ)    0;
+             0              0           1;];
+angleX = pi;
+Rfrd_ned  = [1      0           0;
+             0  cos(angleX) -sin(angleX);
+             0  sin(angleX) cos(angleX);];
+Rbody_ned = Rbody_frd*Rfrd_ned;
+clear angleZ angleX Rfrd_ned;
 %% EKF parameters
 
 % --------------------------------------------------------------------------------------------------------
@@ -96,10 +110,10 @@ bias_wq0    = IMU_w_b_bias(2,1);    % initial guess of bias in q direction (of v
 bias_wr0    = IMU_w_b_bias(3,1);    % initial guess of bias in r direction (of vector w angular velocity) can be estimated with measurements
 x0EKF       = [ph0;th0;ps0;bias_wp0;bias_wq0;bias_wr0];
 
-P0_ph_meas = r_ph_meas;
-P0_th_meas = r_th_meas;
-P0_ps_meas = r_ps_meas;
-P0_bias_wp = IMU_w_b_variance(1,1);
-P0_bias_wq = IMU_w_b_variance(2,1);
-P0_bias_wr = IMU_w_b_variance(3,1);
-P0         = diag([P0_ph_meas,P0_th_meas,P0_ps_meas,P0_bias_wp,P0_bias_wq,P0_bias_wr]);
+P0_ph_meas  = r_ph_meas;
+P0_th_meas  = r_th_meas;
+P0_ps_meas  = r_ps_meas;
+P0_bias_wp  = IMU_w_b_variance(1,1);
+P0_bias_wq  = IMU_w_b_variance(2,1);
+P0_bias_wr  = IMU_w_b_variance(3,1);
+P0          = diag([P0_ph_meas,P0_th_meas,P0_ps_meas,P0_bias_wp,P0_bias_wq,P0_bias_wr]);
