@@ -27,7 +27,7 @@ Ts_slk      =       0.01;              % sampling time (s)
 Tend_slk    =       400;               % simulation time (s) 
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [1;1;1;0;0;0]*(0.01);    % Initial State Vector - Roll, Pitch, Yaw angles and rates
+x0          = [1;1;1;0;0;0]*(0.2);    % Initial State Vector - Roll, Pitch, Yaw angles and rates
 
 %% compute the inversion of matrix Mtau_u: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = Mtau_u * (u1,u2,u3,u4)'
 % syms k l b
@@ -62,7 +62,7 @@ x0          = [1;1;1;0;0;0]*(0.01);    % Initial State Vector - Roll, Pitch, Yaw
 %% Pole Placement control
 load("K_pole.mat");
 
-% % Robustness (param x2)
+% % % Robustness (param x2)
 % load("K_pole_rob.mat")
 %% Inverse_dynamic Control
 load("K_inverse.mat");
