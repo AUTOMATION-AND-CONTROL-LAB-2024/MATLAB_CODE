@@ -34,7 +34,7 @@ param       =       [Ixx;Iyy;Izz;l;k;b;m];
 % invJ = inv(J);
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [0.01;0.01;0.01;0;0;0];          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
+x0          = [1;1;1;0;0;0]*0.01;          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
 tau_eq      = [0;0;0];                % Control Input Equilibrium - Roll, Pitch, Yaw torques
 
 %% Desired values
@@ -74,11 +74,12 @@ Be      =   [linsys.B
 if rank(ctrb(Ae,Be))==9
     fprintf('The enlarged system is controllable\n ')
 end
-  
-K       =   place(Ae,Be,[-0.11 -0.12 -0.13 -0.14 -0.15 -0.1 -10.2 -10.21 -10.22]);
+
+K       =   place(Ae,Be,[-0.08 -0.09 -0.04 -0.05 -0.06 -0.07 -10.2 -10.21 -10.22]);
 
 Kx      =   K(:,1:6);
 Kv      =   K(:,7:9);
-save("K_pole_rob","Kx","Kv")
+% save("K_pole","Kx","Kv")
+% save("K_pole_rob","Kx","Kv")
 open('pole_placement3dof.slx')
 sim('pole_placement3dof.slx',Tend_slk);
