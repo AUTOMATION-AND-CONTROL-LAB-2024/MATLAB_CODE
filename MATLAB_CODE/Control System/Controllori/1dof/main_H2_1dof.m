@@ -23,7 +23,7 @@ param       =       [Ixx;Iyy;Izz;l;k;b;m];
 % inv(Conversion);
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [0;0];          % State Equilibrium Vector - Roll angles and rates
+x0          = [1;0]*0.01;          % State Equilibrium Vector - Roll angles and rates
 tau_eq      = [0];            % Control Input Equilibrium - Roll torque
 %% Desired values
 x_des       = [1;0];          % notice that is scaled in simulation! 
@@ -31,23 +31,30 @@ x_des       = [1;0];          % notice that is scaled in simulation!
 Ts_slk      =       0.01;              % sampling time (s)
 Tend_slk    =       400;               % simulation time (s)
 %% Linearization
-sim('Modello_corretto_1dof.slx',Tend_slk);
-
-mdl         = 'Modello_corretto_1dof';
-open_system(mdl)
-blockpath   = 'Modello_corretto_1dof/G';
-linsys      = linearize(mdl,blockpath);
+% sim('Modello_corretto_1dof.slx',Tend_slk);
+% 
+% mdl         = 'Modello_corretto_1dof';
+% open_system(mdl)
+% blockpath   = 'Modello_corretto_1dof/G';
+% linsys      = linearize(mdl,blockpath);
+% 
+% Alin=linsys.A;
+% Blin=linsys.B;
+% Clin=linsys.C;
+% Dlin=linsys.D;
+% save("system_lin0_1dof","Alin","Blin","Clin","Dlin");
+load("system_lin0_1dof.mat")
 
 %% H2 infinity
 rounding_n      =   3;                  % rounding at the nth decimal place
-Difm            =   di_fixed_modes(linsys.A,linsys.B,linsys.C,rounding_n);
-[K,feas]        =   H2_control_1dof(linsys.A,linsys.B,linsys.C,linsys.D);
+Difm            =   di_fixed_modes(Alin,Blin,Clin,rounding_n);
+[K,feas]        =   H2_control_1dof(Alin,Blin,Clin,Dlin);
 save("K_H2_1dof.mat","K")
 
 % Transfer function between gamma and y
 s=tf('s')
-A_cl=linsys.A+linsys.B*K;
-stable_sys= linsys.C*inv(s*eye(2)-A_cl)*linsys.B;      
+A_cl=Alin+Blin*K;
+stable_sys= Clin*inv(s*eye(2)-A_cl)*Blin;      
 eig(stable_sys)         
 
 % PI controller to obtain desired performances
@@ -58,35 +65,3 @@ save("PI","Kp","Ki","Kd")
 
 open("H2_control_sim_1dof.slx")
 sim("H2_control_sim_1dof.slx",Tend_slk)
-%% Pole placement + observer
-% pzmap(ss(linsys.A,linsys.B,linsys.C,linsys.D))
-
-% check observability so as to compute observer
-if rank(obsv(linsys.A,linsys.C))==2
-    fprintf('The system is observable\n ')
-end
-L       =   place(linsys.A',linsys.C',[-50.7 -50.6])';
-
-% check controllability so as to place pole
-if rank(ctrb(linsys.A,linsys.B))==2
-    fprintf('The system is controllable\n ')
-end
-
-% design the enlarged system
-Ae      =   [ linsys.A, zeros(2,1);
-                -linsys.C, zeros(1,1)];
-Be      =   [linsys.B 
-            zeros(1,1)];
-
-if rank(ctrb(Ae,Be))==3
-    fprintf('The enlarged system is controllable\n ')
-end
-  
-K       =   place(Ae,Be,[-0.11 -0.12 -0.13]);
-
-Kx      =   K(:,1:2);
-Kv      =   K(:,3);
-save("K_pole_1dof","Kx","Kv")
-
-open("pole_placement_1dof.slx")
-sim("pole_placement_1dof.slx",Tend_slk)

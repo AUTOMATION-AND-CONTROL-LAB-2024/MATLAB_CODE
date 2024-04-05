@@ -59,15 +59,10 @@ x0          = [1;1;1;0;0;0]*0.01;          % State Equilibrium Vector - Roll, Pi
 % poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 % [Kpole ,prec]= place(A,B,poles);
 
-%% PolePlacement Control
-load("K_pole_1dof.mat");
-
-%% InverseD Dynamics Control
-load("K_inverse_1dof.mat");
 
 %% H2 Control
-% load("K_H2_1dof.mat");
-% load("PI.mat");
+load("K_H2_1dof.mat");
+load("PI.mat");
 
 %% IMU data loading
 IMU_data = load("IMU_data.mat");

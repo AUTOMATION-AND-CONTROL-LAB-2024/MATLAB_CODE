@@ -62,16 +62,6 @@ x0          = [1;1;1;0;0;0]*0.01;          % State Equilibrium Vector - Roll, Pi
 %% PolePlacement Control
 load("K_pole_2dof.mat");
 
-%% InverseDynamics Control
-load("K_inverse_2dof");
-
-%% H2 Control    
-% Da sistemare. Ho io il file bozza ma non l'ho caricato perchè non funzia al momento
-load("PI1.mat")
-load("PI2.mat")
-load("Decoupler_2dof.mat")
-load("K_H2_2dof.mat")
-
 %% IMU data loading
 IMU_data = load("IMU_data.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table

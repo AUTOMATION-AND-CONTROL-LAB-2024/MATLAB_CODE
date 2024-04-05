@@ -13,7 +13,7 @@ l           =       0.25;                   %  quadcopter arm (m)
 k           =       0.0022;                 %  lift constant
 b           =       1.14e-7;                %  drag constant
 m           =       0.61+0.064*4;           %  mass (kg)
-param       =       [Ixx;Iyy;Izz;l;k;b;m];
+param       =       [Ixx;Iyy;Izz;l;k;b;m]*1.2;
  
 % cph         =       cos(phi);
 % cth         =       cos(theta);
@@ -61,9 +61,6 @@ x0          = [1;1;1;0;0;0]*(0.3);    % Initial State Vector - Roll, Pitch, Yaw 
 
 %% Pole Placement control
 load("K_pole_slow1.mat");
-
-%% Inverse_dynamic Control
-% load("K_inverse.mat");
 
 %% IMU data loading
 IMU_data = load("IMU_data.mat");
