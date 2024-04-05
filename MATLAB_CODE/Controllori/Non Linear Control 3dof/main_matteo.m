@@ -12,7 +12,7 @@ l           =       0.225;
 k           =       2.98e-7;
 b           =       1.14e-7;
 m           =       0.468;        %  mass (kg)
-param       =       [Ixx;Iyy;Izz;l;k;b;m]*1.2;
+param       =       [Ixx;Iyy;Izz;l;k;b;m];
  
 % %% compute the inversion of matrix H: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = H * (u1,u2,u3,u4)'
 % syms k l b
@@ -54,4 +54,4 @@ end
 system_poles = eig(A);
 poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 [Kpole ,prec]= place(A,B,poles);
-save("K_inverse_rob","Kpole")
+save("K_inverse.mat","Kpole")

@@ -62,25 +62,15 @@ x0          = [1;1;1;0;0;0]*0.01;          % State Equilibrium Vector - Roll, Pi
 %% PolePlacement Control
 load("K_pole_2dof.mat");
 
-% % Robustness
-% load("K_pole_rob_2dof.mat");
 %% InverseDynamics Control
 load("K_inverse_2dof");
 
-% % Robustness
-% load("K_inverse_rob_2dof.mat");
 %% H2 Control    
 % Da sistemare. Ho io il file bozza ma non l'ho caricato perchè non funzia al momento
 load("PI1.mat")
 load("PI2.mat")
 load("Decoupler_2dof.mat")
 load("K_H2_2dof.mat")
-
-% % Robustness
-% load("PI1_rob.mat")
-% load("PI2_rob.mat")
-% load("Decoupler_rob_2dof.mat")
-% load("K_H2_rob_2dof.mat")
 
 %% IMU data loading
 IMU_data = load("IMU_data.mat");

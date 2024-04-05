@@ -54,7 +54,7 @@ rounding_n      =   3;                  % rounding at the nth decimal place
 % Difm            =   di_fixed_modes(linsys.A,linsys.B,linsys.C,rounding_n);
 [K,feas]        =   H2_control_2dof(linsys.A,linsys.B,linsys.C,linsys.D);
 save("K_H2_2dof","K")
-% save("K_H2_rob_2dof","K")
+
 % Transfer function between gamma and y
 s               =   tf('s')
 A_cl            =   linsys.A+linsys.B*K;
@@ -65,7 +65,6 @@ eig(stable_sys)
 Decoupler       =   [1 -stable_sys(1,2)/stable_sys(1,1);
                     -stable_sys(2,1)/stable_sys(2,2) 1];
 save("Decoupler_2dof","Decoupler")
-% save("Decoupler_rob_2dof","Decoupler")
 
 % Complete transfer function ( Diagonal thanks to the chosen structure of
 % the decoupler) on which we have to build the PI controllers
@@ -78,14 +77,12 @@ Kp11            =   0.9736;
 Ki11            =   0.988;
 Kd11            =   0.03878;
 save("PI1","Kp11","Ki11","Kd11")
-% save("PI1_rob","Kp11","Ki11","Kd11")
 
 Gdes22          =   Gdes(2,2);
 Kp22            =   0.08674;
 Ki22            =   0.08484;
 Kd22            =   0;
 save("PI2","Kp22","Ki22","Kd22")
-% save("PI2_rob","Kp22","Ki22","Kd22")
 
 open("H2_control_sim_2dof.slx")
 sim("H2_control_sim_2dof.slx",Tend_slk)
@@ -118,7 +115,6 @@ K       =   place(Ae,Be,[-0.11 -0.12 -0.13 -0.14 -0.15 -0.1]);
 Kx      =   K(:,1:4);
 Kv      =   K(:,5:6);
 save("K_pole_2dof","Kx","Kv")
-% save("K_pole_rob_2dof","Kx","Kv")
 
 open('pole_placement_2dof.slx')
 sim('pole_placement_2dof.slx',Tend_slk);
