@@ -85,5 +85,5 @@ Kx      =   K(:,1:6);
 Kv      =   K(:,7:9);
 save("K_pole_slow1","Kx","Kv")
 
-open('pole_placement3dof.slx')
-sim('pole_placement3dof.slx',Tend_slk);
+open('pole_placement.slx')
+sim('pole_placement.slx',Tend_slk);
