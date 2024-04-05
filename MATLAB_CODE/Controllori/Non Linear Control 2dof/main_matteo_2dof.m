@@ -57,8 +57,6 @@ system_poles = eig(A);
 poles = -[0.13,0.14,0.15,0.16];
 [Kpole ,prec]= place(A,B,poles);
 save("K_inverse_2dof","Kpole");
-% % Robustness
-% save("K_inverse_rob_2dof","Kpole");
 
 open('InverseDynamicControl_NominalCondition_2dof.slx')
 sim('InverseDynamicControl_NominalCondition_2dof.slx',Tend_slk);

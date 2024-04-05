@@ -43,7 +43,6 @@ rounding_n      =   3;                  % rounding at the nth decimal place
 Difm            =   di_fixed_modes(linsys.A,linsys.B,linsys.C,rounding_n);
 [K,feas]        =   H2_control_1dof(linsys.A,linsys.B,linsys.C,linsys.D);
 save("K_H2_1dof.mat","K")
-% save("K_H2_rob_1dof.mat","K")
 
 % Transfer function between gamma and y
 s=tf('s')
@@ -56,7 +55,6 @@ Kp              =   0.1476;
 Ki              =   0.1464;
 Kd              =   0;
 save("PI","Kp","Ki","Kd")
-% save("PI_rob","Kp","Ki","Kd")
 
 open("H2_control_sim_1dof.slx")
 sim("H2_control_sim_1dof.slx",Tend_slk)
@@ -89,7 +87,6 @@ K       =   place(Ae,Be,[-0.11 -0.12 -0.13]);
 Kx      =   K(:,1:2);
 Kv      =   K(:,3);
 save("K_pole_1dof","Kx","Kv")
-% save("K_pole_rob_1dof","Kx","Kv")
 
 open("pole_placement_1dof.slx")
 sim("pole_placement_1dof.slx",Tend_slk)
