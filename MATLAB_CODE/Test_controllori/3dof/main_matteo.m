@@ -62,13 +62,9 @@ x0          = [1;1;1;0;0;0]*(0.01);    % Initial State Vector - Roll, Pitch, Yaw
 %% Pole Placement control
 load("K_pole.mat");
 
-% % % Robustness (param x2)
-% load("K_pole_rob.mat")
 %% Inverse_dynamic Control
 load("K_inverse.mat");
 
-% % Robustness (param x2)
-% load("K_inverse_rob.mat")
 %% IMU data loading
 IMU_data = load("IMU_data.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
