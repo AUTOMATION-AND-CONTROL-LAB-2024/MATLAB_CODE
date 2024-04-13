@@ -4,14 +4,14 @@ close all
 clc
 
 %% Model parameters 
-g           =       9.81;         %  gravity acceleration (m/s^2)
-Ixx         =       4.856e-3;     %  moment of inertia (kg*m^2)
-Iyy         =       4.856e-3;     %  moment of inertia (kg*m^2)
-Izz         =       8.801e-3;     %  moment of inertia (kg*m^2)
-l           =       0.225;
-k           =       2.98e-7;
-b           =       1.14e-7;
-m           =       0.468;        %  mass (kg)
+g           =       9.81;               %  gravity acceleration (m/s^2)
+Ixx         =       0.015;              %  moment of inertia (kg*m^2)
+Iyy         =       0.015;              %  moment of inertia (kg*m^2)
+Izz         =       0.03;               %  moment of inertia (kg*m^2)
+l           =       0.25;               %  quadcopter arm (m)
+k           =       0.0022;             %  lift constant
+b           =       1.14e-7;            %  drag constant
+m           =       0.61+0.064*4;       %  mass (kg)
 param       =       [Ixx;Iyy;Izz;l;k;b;m];
  
 % %% compute the inversion of matrix H: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = H * (u1,u2,u3,u4)'
@@ -38,7 +38,7 @@ Ts_slk      =       0.01;              % sampling time (s)
 Tend_slk    =       400;               % simulation time (s) 
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          =       [0;0;0;0;0;0];          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
+x0          =       [1;1;1;0;0;0]*0.01;          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
 % w_eq        = [1000;1200;1400;2000];  % Control Input Equilibrium - Propellers' Angular Velocities
 
 %% Linearized Model (Inverse Dynamic)
