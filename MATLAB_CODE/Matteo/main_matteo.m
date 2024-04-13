@@ -10,7 +10,7 @@ Ixx         =       0.015;                  %  moment of inertia (kg*m^2)
 Iyy         =       0.015;                  %  moment of inertia (kg*m^2)
 Izz         =       0.03;                   %  moment of inertia (kg*m^2)
 l           =       0.25;                   %  quadcopter arm (m)
-k           =       0.0022;                 %  lift constant
+k           =       0.022;                  %  lift constant
 b           =       1.14e-7;                %  drag constant
 m           =       0.61+0.064*4;           %  mass (kg)
 param       =       [Ixx;Iyy;Izz;l;k;b;m];
@@ -60,20 +60,21 @@ poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 [Kpole ,prec]= place(A,B,poles);
 
 %% PolePlacement Control
-load("K_pole.mat");
+load("K_pole_inv.mat");
 
 %% IMU data loading
 IMU_data = load("IMU_data.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
 clear IMU_data;
 %% IMU data extraction
-IMU_a_b_bias          = ones(3,1)*0.1;                    % bias in IMU linear acceleration measurement     (THEORY)
+IMU_a_b_bias          = ones(3,1)*0.001;                    % bias in IMU linear acceleration measurement     (THEORY)
 IMU_w_b_bias          = IMU_var_bias_matrix(:,2);         % bias in IMU angular velocity measurement 
-IMU_mf_b_bias         = ones(3,1)*0.1;                    % bias in IMU magnetic field measurement          (THEORY)
+IMU_mf_b_bias         = ones(3,1)*0.001;                    % bias in IMU magnetic field measurement          (THEORY)
 IMU_a_b_variance      = IMU_var_bias_matrix(:,1);         % variance in IMU linear acceleration measurement
 IMU_w_b_variance      = IMU_var_bias_matrix(:,3);         % variance in IMU angular velocity measurement
-IMU_mf_b_variance     = IMU_var_bias_matrix(:,4);         % variance in IMU magnetic field measurement 
+IMU_mf_b_variance     = ones(3,1)*0.001;         % variance in IMU magnetic field measurement 
 
+IMU_pole              = 10;                               % pole of the high-pass-filter of IMU_measurements block
 %% rotation from IMU-frame to BODY-frame
 angleZ = pi/4;
 Rbody_frd = [cos(angleZ) -sin(angleZ)   0;
@@ -90,16 +91,18 @@ clear angleZ angleX Rfrd_ned;
 % --------------------------------------------------------------------------------------------------------
 % oss: Ts_EKF_meas must be a multiple of Ts_EKF_integr, example: Ts_EKF_meas = 2 * Ts_EKF_integr
 Ts_EKF_integr      = 0.01;     % [s] Ts for the ODE integration 
-Ts_EKF_meas        = 0.05;     % [s] Ts for measurement update
+Ts_EKF_meas        = 0.01;     % [s] Ts for measurement update
 % --------------------------------------------------------------------------------------------------------
 
-q_angle     = 0.5;       % q-elements related to phi,theta,yaw states
-q_bias_w_b  = 0.01;       % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
-Q           = diag([q_angle,q_angle,q_angle, q_bias_w_b,q_bias_w_b,q_bias_w_b]);
+q_phi     = 1e-5;       % q-elements related to phi,theta,yaw states
+q_theta   = 50e-6;
+q_psi     = 50e-6;
+q_bias_w_b  = 1e-2;       % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
+Q           = diag([q_phi,q_theta,q_psi, q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
-r_ph_meas   = 0.1;    % variance related to phi computation from IMU measurement
-r_th_meas   = 0.1;    % variance related to theta computation from IMU measurement
-r_ps_meas   = 5;    % variance related to psi computation from IMU measurement
+r_ph_meas   = 1e-3;    % variance related to phi computation from IMU measurement
+r_th_meas   = 1e-3;    % variance related to theta computation from IMU measurement
+r_ps_meas   = 1e-3;    % variance related to psi computation from IMU measurement
 R           = diag([r_th_meas,r_th_meas,r_ps_meas]);
 
 ph0         = -pi/4;                % initial guess of phi angle

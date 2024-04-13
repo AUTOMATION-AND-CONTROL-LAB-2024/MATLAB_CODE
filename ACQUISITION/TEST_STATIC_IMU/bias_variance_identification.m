@@ -58,7 +58,7 @@ figure(3)
 plot(dataset(:,1),IMU_w_b(:,3));
 
 %% extract magnetic field (mf_b) (16,17,18 columns)
-IMU_mf_b = dataset(:,9:11);
+IMU_mf_b = dataset(:,16:18)*1e5;
 IMU_mf_b_mean = zeros(3,1);  % column vector
 IMU_mf_b_var  = zeros(3,1);  % column vector
 for i = 1:1:3

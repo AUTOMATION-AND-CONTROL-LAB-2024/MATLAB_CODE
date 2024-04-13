@@ -28,7 +28,7 @@ sth = sin(th_meas);
 cth = cos(th_meas);
 
 % psi computation
-if abs(sin(th_meas)) > 0.1  % sin(th) != 0 
+if abs(sin(th_meas)) > 0.15  % sin(th) != 0 
     method_ps = 1;
     ps_meas_numerator   = (sth*cph*mf_b(2) - sth*sph*mf_b(3))/(-sth);       % don't modify
     ps_meas_denominator = (-sph*mf_b(2) - cph*mf_b(3) + cth*mf_u)/(-sth);   % don't modify
