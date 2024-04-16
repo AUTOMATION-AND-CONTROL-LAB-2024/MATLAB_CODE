@@ -28,7 +28,7 @@ load("system_lin0.mat")
 %% H2 infinity
 rounding_n      =   3;
 % Difm            =   di_fixed_modes(Alin,Blin,Clin,rounding_n);
-[K,feas,ris]        =    H2_control(Alin,Blin,Clin);
+[K,feas,ris]        =    H2_control_lmi(Alin,Blin,Clin);
 save("K_H2","K")
 
 s=tf('s')
