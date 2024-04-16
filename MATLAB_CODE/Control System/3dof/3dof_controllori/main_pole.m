@@ -58,11 +58,11 @@ load("system_lin0.mat")
 %% Pole placement + observer
 % pzmap(ss(linsys.A,linsys.B,linsys.C,linsys.D))
 
-% check observability so as to compute observer
-% if rank(obsv(Alin,Clin))==6
-%     fprintf('The system is observable\n')
-% end
-% L       =   place(Alin',Clin',[-50.7 -50.6 -50.5 -50.4 -50.3 -50.2])';
+check observability so as to compute observer
+if rank(obsv(Alin,Clin))==6
+    fprintf('The system is observable\n')
+end
+L       =   place(Alin',Clin',[-50.7 -50.6 -50.5 -50.4 -50.3 -50.2])';
 
 % check controllability so as to place pole
 if rank(ctrb(Alin,Blin))==6
