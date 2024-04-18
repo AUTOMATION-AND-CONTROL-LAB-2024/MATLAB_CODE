@@ -1,4 +1,4 @@
-function [K,feas,ris]=H2_control(A,B,C,D)
+function [K,feas,ris]=H2_control(A,B,C)
 
 % The function uses LMIs to compute the control gain of a state-feedback
 % control law 

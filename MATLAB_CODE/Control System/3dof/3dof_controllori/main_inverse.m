@@ -46,6 +46,14 @@ A = [zeros(3,3),    eye(3);
      zeros(3,3),    zeros(3,3);];
 B = [zeros(3,3);
      eye(3);];
+C = [eye(3) zeros(3,3)];
+D = zeros(3,1);
+
+% check observability so as to compute observer
+if rank(obsv(A,C))==6
+    fprintf('The system is observable\n')
+end
+L       =   place(A',C',[-50.7 -50.6 -50.5 -50.4 -50.3 -50.2])';
 
 % check controllability so as to place pole
 if rank(ctrb(A,B))==6

@@ -3,7 +3,7 @@ clear all
 close all
 clc
 %% extract static measurements from raw_data
-raw_data = load("RAW_DATA/Test_Noise_Magnetometer_Acq_1.mat");
+raw_data = load("RAW_DATA/Test_STATIC_SENSORS.mat");
 dataset = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
 clear raw_data;
 [rows,colums] = size(dataset);
@@ -58,7 +58,7 @@ figure(3)
 plot(dataset(:,1),IMU_w_b(:,3));
 
 %% extract magnetic field (mf_b) (16,17,18 columns)
-IMU_mf_b = dataset(:,16:18)*1e5;
+IMU_mf_b = dataset(:,18:20);
 IMU_mf_b_mean = zeros(3,1);  % column vector
 IMU_mf_b_var  = zeros(3,1);  % column vector
 for i = 1:1:3
