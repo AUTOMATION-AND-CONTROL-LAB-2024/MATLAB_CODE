@@ -1,78 +1,18 @@
-%% Main
+%% EKF Main
 clear all
 close all
 clc
-
-%% Model parameters 
-g           =       9.81;                   %  gravity acceleration (m/s^2)
-mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
-Ixx         =       0.015;                  %  moment of inertia (kg*m^2)
-Iyy         =       0.015;                  %  moment of inertia (kg*m^2)
-Izz         =       0.03;                   %  moment of inertia (kg*m^2)
-l           =       0.25;                   %  quadcopter arm (m)
-k           =       0.022;                  %  lift constant
-b           =       1.14e-7;                %  drag constant
-m           =       0.61+0.064*4;           %  mass (kg)
-param       =       [Ixx;Iyy;Izz;l;k;b;m];
- 
-% cph         =       cos(phi);
-% cth         =       cos(theta);
-% cps         =       cos(psi);
-% sph         =       sin(phi);
-% sth         =       sin(theta);
-% sps         =       sin(psi);
-
-%% Simulation of the model with random parameters
-Ts_slk      =       0.01;              % sampling time (s)
-Tend_slk    =       400;               % simulation time (s) 
-
-%% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [1;1;1;0;0;0]*(0.5);    % Initial State Vector - Roll, Pitch, Yaw angles and rates
-
-%% compute the inversion of matrix Mtau_u: (mg/c_th*c_ps, tau_ph, tau_th, tau_ps)' = Mtau_u * (u1,u2,u3,u4)'
-syms k l b
-Mtau_u = [k      k       k       k;
-     0      0       l*k     -l*k;
-     -l*k   l*k     0       0;
-     -b     -b      b       b;];
-inv(Mtau_u)
-
-%% compute the inversion matrix of J
-syms J11 J12 J13 J21 J22 J23 J31 J32 J33
-syms C11 C12 C13 C21 C22 C23 C31 C32 C33
-J = [J11 J12 J13;
-     J21 J22 J23;
-     J31 J32 J33;];
-C = [C11 C12 C13;
-     C21 C22 C23;
-     C31 C32 C33;];
-invJ = inv(J);
-
-%% Linearized Model (Inverse Dynamic)
-A = [zeros(3,3),    eye(3);
-     zeros(3,3),    zeros(3,3);];
-B = [zeros(3,3);
-     eye(3);];
-Mo = ctrb(A,B);
-rankMo = rank(Mo);  % ok, it is controllable
-system_poles = eig(A);
-poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
-[Kpole ,prec]= place(A,B,poles);
-
-%% PolePlacement Control
-load("K_pole_inv.mat");
-
 %% IMU data loading
 IMU_data = load("IMU_data.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
 clear IMU_data;
 %% <IMU_measurements> parameters
-IMU_a_b_bias          = ones(3,1)*0.001;                    % bias in IMU linear acceleration measurement     (THEORY)
+IMU_a_b_bias          = ones(3,1)*0.001;                  % bias in IMU linear acceleration measurement     (THEORY)
 IMU_w_b_bias          = IMU_var_bias_matrix(:,2);         % bias in IMU angular velocity measurement 
-IMU_mf_b_bias         = ones(3,1)*0.001;                    % bias in IMU magnetic field measurement          (THEORY)
+IMU_mf_b_bias         = ones(3,1)*0.001;                  % bias in IMU magnetic field measurement          (THEORY)
 IMU_a_b_variance      = IMU_var_bias_matrix(:,1);         % variance in IMU linear acceleration measurement
 IMU_w_b_variance      = IMU_var_bias_matrix(:,3);         % variance in IMU angular velocity measurement
-IMU_mf_b_variance     = ones(3,1)*0.001;         % variance in IMU magnetic field measurement 
+IMU_mf_b_variance     = ones(3,1)*0.001;                  % variance in IMU magnetic field measurement 
 
 IMU_pole              = 10;                               % pole of the high-pass-filter of IMU_measurements block
 %% rotation from IMU-frame to BODY-frame
