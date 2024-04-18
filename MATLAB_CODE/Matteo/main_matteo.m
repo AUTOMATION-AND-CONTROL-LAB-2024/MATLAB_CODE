@@ -89,20 +89,20 @@ clear angleZ angleX Rfrd_ned;
 %% EKF parameters
 
 % --------------------------------------------------------------------------------------------------------
-% oss: Ts_EKF_meas must be a multiple of Ts_EKF_integr, example: Ts_EKF_meas = 2 * Ts_EKF_integr
-Ts_EKF_integr      = 0.01;     % [s] Ts for the ODE integration 
+% oss: Ts_EKF_meas must be a multiple of Ts_EKF_integr, example: Ts_EKF_meas = 10 * Ts_EKF_integr
+Ts_EKF_integr      = 0.0001;     % [s] Ts for the ODE integration 
 Ts_EKF_meas        = 0.01;     % [s] Ts for measurement update
 % --------------------------------------------------------------------------------------------------------
 
-q_phi     = 1e-5;       % q-elements related to phi,theta,yaw states
-q_theta   = 50e-6;
-q_psi     = 50e-6;
-q_bias_w_b  = 1e-2;       % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
+q_phi     = 3e-2;       % q-elements related to phi,theta,yaw states
+q_theta   = 1e-2;
+q_psi     = 8e-3;
+q_bias_w_b  = 1e-7;       % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q           = diag([q_phi,q_theta,q_psi, q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
 r_ph_meas   = 1e-3;    % variance related to phi computation from IMU measurement
-r_th_meas   = 1e-3;    % variance related to theta computation from IMU measurement
-r_ps_meas   = 1e-3;    % variance related to psi computation from IMU measurement
+r_th_meas   = 8e-3;    % variance related to theta computation from IMU measurement
+r_ps_meas   = 1e-2;    % variance related to psi computation from IMU measurement
 R           = diag([r_th_meas,r_th_meas,r_ps_meas]);
 
 ph0         = -pi/4;                % initial guess of phi angle

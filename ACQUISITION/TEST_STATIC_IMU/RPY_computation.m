@@ -28,15 +28,31 @@ sth = sin(th_meas);
 cth = cos(th_meas);
 
 % psi computation
-if abs(sin(th_meas)) > 0.15  % sin(th) != 0 
+
+% if abs(sin(th_meas)) > 0.15  % sin(th) != 0 
+%     method_ps = 1;
+%     ps_meas_numerator   = (sth*cph*mf_b(2) - sth*sph*mf_b(3))/(-sth);       % don't modify
+%     ps_meas_denominator = (-sph*mf_b(2) - cph*mf_b(3) + cth*mf_u)/(-sth);   % don't modify
+%     ps_meas = atan2(ps_meas_numerator, ps_meas_denominator);
+% else                        % sin(th) == 0
+%     method_ps = 2;
+%     ps_meas_numerator   = (mf_b(2) - cth*sph*mf_u)*(-cth);
+%     ps_meas_denominator = cph*mf_b(1);
+%     ps_meas = atan2(ps_meas_numerator, ps_meas_denominator);
+% end
+ps_meas_num   = mf_b(3)*sph - mf_b(2)*cph;
+ps_meas_den = mf_b(1)*cth + mf_b(2)*sth*sph + mf_b(3)*sth*cph;
+
+if abs(ps_meas_den) > 0.10
+    ps_meas = atan2(ps_meas_num, ps_meas_den);
     method_ps = 1;
-    ps_meas_numerator   = (sth*cph*mf_b(2) - sth*sph*mf_b(3))/(-sth);       % don't modify
-    ps_meas_denominator = (-sph*mf_b(2) - cph*mf_b(3) + cth*mf_u)/(-sth);   % don't modify
-    ps_meas = atan2(ps_meas_numerator, ps_meas_denominator);
-else                        % sin(th) == 0
+else
+    if ps_meas_num > 0 
+        ps_meas = pi/2;
+    else
+        ps_meas = -pi/2;
+    end
     method_ps = 2;
-    ps_meas_numerator   = (mf_b(2) - cth*sph*mf_u)*(-cth);
-    ps_meas_denominator = cph*mf_b(1);
-    ps_meas = atan2(ps_meas_numerator, ps_meas_denominator);
 end
+
 RPY_meas = [ph_meas;th_meas;ps_meas];
