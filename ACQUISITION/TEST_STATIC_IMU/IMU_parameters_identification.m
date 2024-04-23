@@ -109,4 +109,4 @@ ylabel("|fft(spectrum)|");
 ColumnsName = {'IMU_a_b_var', 'IMU_w_b_mean', 'IMU_w_b_var', 'IMU_mf_b_var','IMU_RPY_var'};
 IMU_var_bias = array2table([IMU_a_b_var, IMU_w_b_mean, IMU_w_b_var, IMU_mf_b_var,IMU_RPY_var],'VariableNames', ColumnsName);
 disp(IMU_var_bias);
-save("IMU_data","IMU_var_bias");
+save("IMU_parameters","IMU_var_bias");
