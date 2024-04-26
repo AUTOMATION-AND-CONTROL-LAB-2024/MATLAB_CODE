@@ -1,3 +1,4 @@
 motor datasheet and drone struture: https://holybro.com/products/s500-v2-kit
 px4 guide: https://docs.px4.io/main/en/config/flight_controller_orientation.html 
 magnetic field computation: https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml?#igrfwmm
+frame ref: https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/issues/59
