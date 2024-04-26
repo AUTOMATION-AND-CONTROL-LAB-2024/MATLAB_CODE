@@ -35,23 +35,39 @@ s=tf('s');
 G_tf = Clin*inv(s*eye(size(Alin))-Alin)*Blin;
 
 %% Frequency Response from model
-
+figure(1)
 bode(G_tf);
 
 % There's a resonance peak
 
 % Can see where CC poles are and their damping
-% Ditemi come faccio a holdare tutti i pzmap su immagini diverse please
-
+figure(2)
 pzmap(G_tf(1,1));
+fb11 = bandwidth(G_tf(1,1))
+figure(3)
 pzmap(G_tf(1,2));
+fb12 = bandwidth(G_tf(1,2))
+figure(4)
 pzmap(G_tf(1,3));
+fb13 = bandwidth(G_tf(1,3))
+figure(5)
 pzmap(G_tf(2,1));
+fb21 = bandwidth(G_tf(2,1))
+figure(6)
 pzmap(G_tf(2,2));
+fb22 = bandwidth(G_tf(2,2))
+figure(7)
 pzmap(G_tf(2,3));
+fb23 = bandwidth(G_tf(2,3))
+figure(8)
 pzmap(G_tf(3,1));
+fb31 = bandwidth(G_tf(3,1))
+figure(9)
 pzmap(G_tf(3,2));
+fb32 = bandwidth(G_tf(3,2))
+figure(10)
 pzmap(G_tf(3,3));
+fb33 = bandwidth(G_tf(3,3))
 
 % Idea for control if there's time: decoupler + 2nd order systems => 3
 % independent real PIDs with Leva's rules
