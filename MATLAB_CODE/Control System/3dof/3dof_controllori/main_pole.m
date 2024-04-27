@@ -79,11 +79,12 @@ if rank(ctrb(Ae,Be))==9
     fprintf('The enlarged system is controllable\n ')
 end
 
-K       =   place(Ae,Be,[-0.06 -0.07 -0.02 -0.03 -0.04 -0.05 -0.08 -0.09 -0.1]);
-
-Kx      =   K(:,1:6);
-Kv      =   K(:,7:9);
-save("K_pole_slow1","Kx","Kv")
+load("K_pole.mat")
+% K       =   place(Ae,Be,[-0.06 -0.07 -0.02 -0.03 -0.04 -0.05 -0.08 -0.09 -0.1]);
+% 
+% Kx      =   K(:,1:6);
+% Kv      =   K(:,7:9);
+% save("K_pole_slow1","Kx","Kv")
 
 open('pole_placement.slx')
 sim('pole_placement.slx',Tend_slk);
