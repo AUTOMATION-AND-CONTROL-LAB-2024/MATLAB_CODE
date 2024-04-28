@@ -53,8 +53,9 @@ Tend_slk    =       400;              % simulation time (s)
 % Alin =linsys.A;
 % Blin =linsys.B;
 % Clin =linsys.C;
-% save("system_lin0","Alin", "Blin", "Clin");
-load("system_lin0.mat")
+% Dlin =linsys.D;
+% save("system_lin0_robust","Alin", "Blin", "Clin", "Dlin");
+load("system_lin0_robust.mat")
 %% Pole placement + observer
 % pzmap(ss(linsys.A,linsys.B,linsys.C,linsys.D))
 
@@ -83,7 +84,7 @@ K       =   place(Ae,Be,[-0.06 -0.07 -0.02 -0.03 -0.04 -0.05 -0.08 -0.09 -0.1]);
 
 Kx      =   K(:,1:6);
 Kv      =   K(:,7:9);
-save("K_pole_slow1","Kx","Kv")
-
-open('pole_placement.slx')
-sim('pole_placement.slx',Tend_slk);
+% save("K_pole_slow1","Kx","Kv")
+load("K_pole.mat")
+open('pole_placement_with_disturbance.slx')
+sim('pole_placement_with_disturbance.slx',Tend_slk);
