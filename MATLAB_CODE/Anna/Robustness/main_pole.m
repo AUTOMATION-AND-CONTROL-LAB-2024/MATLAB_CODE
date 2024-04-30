@@ -21,20 +21,9 @@ param       =       [Ixx;Iyy;Izz;l;k;b;m];
 %      -l*k   l*k     0       0;
 %      -b     -b      b       b;];
 % inv(Conversion);
-% 
-% %% compute the inversion matrix of J
-% syms J11 J12 J13 J21 J22 J23 J31 J32 J33
-% syms C11 C12 C13 C21 C22 C23 C31 C32 C33
-% J = [J11 J12 J13;
-%      J21 J22 J23;
-%      J31 J32 J33;];
-% C = [C11 C12 C13;
-%      C21 C22 C23;
-%      C31 C32 C33;];
-% invJ = inv(J);
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [1;1;1;0;0;0]*0.01;          % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
+x0          = [1;1;1;0;0;0]*0.01;     % State Equilibrium Vector - Roll, Pitch, Yaw angles and rates
 tau_eq      = [0;0;0];                % Control Input Equilibrium - Roll, Pitch, Yaw torques
 
 %% Desired values
@@ -88,3 +77,33 @@ Kv      =   K(:,7:9);
 load("K_pole.mat")
 open('pole_placement_with_disturbance.slx')
 sim('pole_placement_with_disturbance.slx',Tend_slk);
+
+
+%% Robustness 
+M   =   [1 0 0 ;
+         0 1 0 ;
+         0 0 1 ;
+         zeros(3,3)];
+N   =   [0 0 0 ;
+         0 0 0 ;
+         0 0 0 ;
+         zeros(3,3)];
+
+% M   =   [1; 1; 1; 0; 0; 0];
+% N   =   [1; 1; 1];
+A_r =   [Alin M;
+        zeros(3,6) zeros(3,3)];
+C_r =   [eye(6) N];
+
+B_r =   [Blin; zeros(3,3)]
+
+
+if rank([Alin M; eye(6) N])==9
+    fprintf('We can estimate constant disturbances\n ')
+end
+
+L       =   place(A_r',C_r',[-50.7 -50.6 -50.5 -50.4 -50.3 -50.2 -50.1 -50 -49.9])';
+
+
+
+
