@@ -57,7 +57,7 @@ IMU_w_b_variance        = IMU_var_bias_matrix(:,3);         % variance in IMU an
 IMU_mf_b_variance       = ones(3,1)*0.001;                  % variance in IMU magnetic field measurement 
 
 %% RPY computation
-meas_pole               = 20;                               % pole [Hz] of the high-pass-filter of IMU_measurements block
+meas_pole               = 15;                               % pole [Hz] of the high-pass-filter of IMU_measurements block
 RPY_pole                = 50;
 %% EKF parameters
 
