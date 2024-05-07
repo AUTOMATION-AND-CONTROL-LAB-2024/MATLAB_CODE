@@ -39,3 +39,18 @@ r_ph_meas   = 1e-3;    % variance related to phi computation from IMU measuremen
 r_th_meas   = 8e-3;    % variance related to theta computation from IMU measurement
 r_ps_meas   = 1e-2;    % variance related to psi computation from IMU measurement
 R           = diag([r_th_meas,r_th_meas,r_ps_meas]);
+
+% --------------------------------------------------------------------------------------------------------
+% RP_EKF
+q_ph        = 630e-0;                 % q-elements related to phi states
+q_th        = 1300e-0;                 % q-elements related to theta states
+q_bias_w_b  = 1e-7;                 % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
+Q_phth      = diag([q_ph,q_th,q_bias_w_b,q_bias_w_b,q_bias_w_b]);
+
+r_ph        = 400e-0;                 % variance related to phi computation from IMU measurement
+r_th        = 900e-0;                 % variance related to theta computation from IMU measurement
+R_phth      = diag([r_ph,r_th]);
+
+% Y_EKF
+q_ps        = 110e-0;                    % q-elements related to yaw state
+r_ps        = 170e+0;                    % variance related to psi computation from IMU measurem

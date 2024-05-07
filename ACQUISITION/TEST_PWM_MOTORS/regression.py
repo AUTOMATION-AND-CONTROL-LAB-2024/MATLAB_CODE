@@ -56,6 +56,7 @@ def plot_motor_LR(data, ind):
     score = model.score(x, y)
     X_new = np.array([[100], [500]])
     y_pred = model.predict(X_new)
+    K = model.coef_
     plt.subplot(2,2,ind)
     plt.plot(x, y,'.')
     plt.plot(X_new, y_pred, color='red', label='Linear Regression')
@@ -63,6 +64,7 @@ def plot_motor_LR(data, ind):
     plt.ylabel('THRUST[N]')
     plt.title('LR SCORE: %.3f'%(score))
     plt.grid()
+    print('Motor'+str(ind)+'Poly coeff: '+str(K))
 
 def plot_motor_array_LR(data):
     fig, axes = plt.subplots(2,2, constrained_layout=True)
@@ -78,15 +80,19 @@ def plot_motor_POLY(data, ind):
     y = np.array(y).reshape(-1, 1)
     x_ = PolynomialFeatures(degree=2, include_bias=False).fit_transform(x)
     model = LinearRegression().fit(x_, y)
+    K = model.coef_
     score = model.score(x_, y)
-    y_pred = model.predict(x_)
+    y_pred = model.predict((x_))
     plt.subplot(2,2,ind)
     plt.plot(x, y,'.')
     plt.plot(x_, y_pred, color='red', label='Linear Regression')
     plt.xlabel('PWM')
     plt.ylabel('THRUST[N]')
     plt.title('POLY SCORE: %.3f'%(score))
+    ax = plt.gca()
+    ax.set_xlim([0,500])
     plt.grid()
+    print('Motor'+str(ind)+'Poly coeff: '+str(K))
 
 def plot_motor_array_POLY(data):
     fig, axes = plt.subplots(2,2, constrained_layout=True)
