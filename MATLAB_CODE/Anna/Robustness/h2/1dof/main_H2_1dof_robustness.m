@@ -66,20 +66,20 @@ load("PI.mat")
 
 % open("H2_control_1dof.slx")
 % sim("H2_control_1dof.slx",Tend_slk)
-%% trial to reduce disturbances
-C = Kp+Ki/s+Kd*s;
-D = stable_sys/(1+stable_sys*C); % transfer function between output and disturbance
-pzmap(D)
-[K,feas,ris]        =   H2_control_1dof(Alin,Blin,Clin,Dlin);
-save("K_H2_robustness_1dof","K")
-
-s=tf('s')
-A_cl=Alin+Blin*K;
-stable_sys= Clin*inv(s*eye(2)-A_cl)*Blin;      
-eig(stable_sys) 
-
+% %% trial to reduce disturbances
+% C = Kp+Ki/s+Kd*s;
+% D = stable_sys/(1+stable_sys*C); % transfer function between output and disturbance
+% pzmap(D)
+% [K,feas,ris]        =   H2_control_1dof(Alin,Blin,Clin,Dlin);
+% save("K_H2_robustness_1dof","K")
+% 
+% s=tf('s')
+% A_cl=Alin+Blin*K;
+% stable_sys= Clin*inv(s*eye(2)-A_cl)*Blin;      
+% eig(stable_sys) 
+% 
 % PI controller to obtain desired performances
-Kp              =   0.000271; %150 s
-Ki              =   0.0001274;
-Kd              =   0.0001441;
-save("PI_robust","Kp","Ki","Kd")
+% Kp              =   0.001976; %50 s
+% Ki              =   0.0001974;
+% Kd              =   0.0004944;
+% save("PI_robust","Kp","Ki","Kd")

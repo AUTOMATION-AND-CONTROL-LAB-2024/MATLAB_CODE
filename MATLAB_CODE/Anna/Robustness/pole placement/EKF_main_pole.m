@@ -60,7 +60,7 @@ x0          = [1;1;1;0;0;0]*(0.01);    % Initial State Vector - Roll, Pitch, Yaw
 % [Kpole ,prec]= place(A,B,poles);
 
 %% Pole Placement control
-load("K_pole.mat");
+load("K_pole_slow.mat");
 
 %% IMU data loading
 IMU_data = load("IMU_data.mat");
