@@ -62,9 +62,8 @@ def plot_motor_LR(data, ind):
     plt.plot(X_new, y_pred, color='red', label='Linear Regression')
     plt.xlabel('PWM')
     plt.ylabel('THRUST[N]')
-    plt.title('LR SCORE: %.3f'%(score))
+    plt.title('Poly coeff: '+str(K))
     plt.grid()
-    print('Motor'+str(ind)+'Poly coeff: '+str(K))
 
 def plot_motor_array_LR(data):
     fig, axes = plt.subplots(2,2, constrained_layout=True)
