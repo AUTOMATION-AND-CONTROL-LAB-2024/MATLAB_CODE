@@ -87,11 +87,10 @@ def plot_motor_POLY(data, ind):
     plt.plot(x_, y_pred, color='red', label='Linear Regression')
     plt.xlabel('PWM')
     plt.ylabel('THRUST[N]')
-    plt.title('POLY SCORE: %.3f'%(score))
+    plt.title(str(K))
     ax = plt.gca()
     ax.set_xlim([0,500])
     plt.grid()
-    print('Motor'+str(ind)+'Poly coeff: '+str(K))
 
 def plot_motor_array_POLY(data):
     fig, axes = plt.subplots(2,2, constrained_layout=True)
