@@ -46,21 +46,23 @@ G = C*inv(s*eye(4)-A)*B;
 Decoupler       =   [1 -G(1,2)/G(1,1);
                     -G(2,1)/G(2,2) 1];
 save("Decoupler_inverse_2dof","Decoupler")
+Decoupler_disc  = c2d(Decoupler,Ts_slk);
+save("Decoupler_inverse_2dof_disc","Decoupler_disc")
 
 Gdes            =   G*Decoupler;                       
 
 % PI controllers tuning (controllers are decoupled) to obtain desired
 % performances
 Gdes11          =   Gdes(1,1); 
-Kp11            =   ;
-Ki11            =   ;
-Kd11            =   ;
+Kp11            =   6.221e-06;
+Ki11            =   7.259e-10;
+Kd11            =   0.01333;
 save("PI1_inverse","Kp11","Ki11","Kd11")
-
+% 
 Gdes22          =   Gdes(2,2);
-Kp22            =   ;
-Ki22            =   ;
-Kd22            =   ;
+Kp22            =   6.221e-06;
+Ki22            =   7.259e-10;
+Kd22            =   0.01333;
 save("PI2_inverse","Kp22","Ki22","Kd22")
 
 
