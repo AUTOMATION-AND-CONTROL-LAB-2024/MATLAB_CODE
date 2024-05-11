@@ -10,13 +10,10 @@ Ixx         =       0.015;                  %  moment of inertia (kg*m^2)
 Iyy         =       0.015;                  %  moment of inertia (kg*m^2)
 Izz         =       0.03;                   %  moment of inertia (kg*m^2)
 l           =       0.25;                   %  quadcopter arm (m)
-k1          =       0.00684324;             %  lift constant motor 1
-k2          =       0.00703859;             %  lift constant motor 2
-k3          =       0.00814964;             %  lift constant motor 3
-k4          =       0.00746697;             %  lift constant motor 4
+k           =       0.0022;                 %  lift constant
 b           =       1.14e-7;                %  drag constant
 m           =       0.61+0.064*4;           %  mass (kg)
-param       =       [Ixx;Iyy;Izz;l;k1;k2;k3;k4;b;m];
+param       =       [Ixx;Iyy;Izz;l;k;b;m];
  
 % cph         =       cos(phi);
 % cth         =       cos(theta);
@@ -62,12 +59,8 @@ x0          = [1;1;1;0;0;0]*0.01;          % State Equilibrium Vector - Roll, Pi
 % poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 % [Kpole ,prec]= place(A,B,poles);
 
-%% H2 Control    
-% Da sistemare. Ho io il file bozza ma non l'ho caricato perchè non funzia al momento
-load("PI1.mat")
-load("PI2.mat")
-load("Decoupler_2dof.mat")
-load("K_H2_2dof.mat")
+%% InverseDynamics Control
+load("K_inverse_2dof");
 
 %% IMU data loading
 IMU_data = load("IMU_data.mat");
