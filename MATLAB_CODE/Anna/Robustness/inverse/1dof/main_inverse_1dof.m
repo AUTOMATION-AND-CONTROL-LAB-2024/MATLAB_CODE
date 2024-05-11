@@ -62,6 +62,9 @@ C = [1,0];
 G = C*inv(s*eye(2)-A)*B;
 
 % PI controller to obtain desired performances
-Kp              =   3.111e-06;
+% Kp              =   3.111e-06;
+% Kd              =   0.01333;
+Kp              =   6.221e-06;
+Ki              =   7.259e-10;
 Kd              =   0.01333;
-save("PI_inverse","Kp","Kd")
+save("PI_inverse","Kp","Ki","Kd")
