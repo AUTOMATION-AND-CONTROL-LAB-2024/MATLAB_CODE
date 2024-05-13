@@ -59,13 +59,7 @@ IMU_mf_b_variance       = ones(3,1)*0.001;                  % variance in IMU ma
 %% RPY computation
 meas_pole               = 15;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
 
-%% rotation from IMU-frame to BODY-frame
-angleZ = pi/4;
-Rbody_frd = [cos(angleZ) -sin(angleZ)   0;
-             sin(angleZ) cos(angleZ)    0;
-             0              0           1;];
-
-%% EKF parameters
+%% EKF1 parameters
 
 % --------------------------------------------------------------------------------------------------------
 % oss: Ts_EKF_meas must be a multiple of Ts_EKF_integr, example: Ts_EKF_meas = 10 * Ts_EKF_integr
