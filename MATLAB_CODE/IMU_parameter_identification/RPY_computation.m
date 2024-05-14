@@ -1,4 +1,4 @@
-function [RPY_meas,method_ps]   = RPY_computation(a_b,mf_b,mf)
+function [RPY_meas]   = RPY_computation(a_b,mf_b)
 % description:
 % - a_b             = measured linear acceleration in body-frame
 % - w_b             = measured angular velocity in body-frame
