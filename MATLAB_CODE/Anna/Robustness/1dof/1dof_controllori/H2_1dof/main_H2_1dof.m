@@ -52,7 +52,7 @@ s=tf('s')
 A_cl=Alin+Blin*K;
 stable_sys= Clin*inv(s*eye(2)-A_cl)*Blin;      
 eig(stable_sys)         
-
+% save("stable_sys_H2_1dof", "stable_sys")
 % PI controller to obtain desired performances
 % Kp              =   0.0006586;
 % Ki              =   0.0006581;
