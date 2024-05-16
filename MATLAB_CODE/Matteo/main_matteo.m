@@ -63,7 +63,7 @@ poles = -[0.1,0.12,0.13,0.14,0.15,0.16];
 load("K_pole_inv.mat");
 
 %% IMU parameter loading
-IMU_data = load("IMU_parameters.mat");
+IMU_data = load("IMU.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
 clear IMU_data;
 
