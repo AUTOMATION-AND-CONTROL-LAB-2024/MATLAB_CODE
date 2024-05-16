@@ -5,7 +5,7 @@ clc
 
 %% Model parameters  
 g           =       9.81;                   %  gravity acceleration (m/s^2)
-mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
+mf          =       [22602; 0; -42062];     %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
 Ixx         =       0.015;                  %  moment of inertia (kg*m^2)
 Iyy         =       0.015;                  %  moment of inertia (kg*m^2)
 Izz         =       0.03;                   %  moment of inertia (kg*m^2)
