@@ -29,6 +29,7 @@ signals = signals(1:i-1,:);
 
 % extraction of signals
 time            = signals(:,1);
+IMU_Tend        = signals(end,1);
 IMU_a_b         = [time, signals(:,6:8)];
 IMU_w_b         = [time, signals(:,9:11)];
 IMU_mf_b        = [time, signals(:,18:20)];
@@ -38,8 +39,7 @@ IMU_yaw         = [time, signals(:,17)];
 IMU_roll_rate   = [time, signals(:,12)];
 IMU_pitch_rate  = [time, signals(:,13)];
 IMU_yaw_rate    = [time, signals(:,14)];
-IMU_Tend        = signals(end,1);    
-
+    
 %% Simulation of the model with random parameters
 Ts_slk      =       0.01;           % sampling time (s)
 Tend_slk    =       IMU_Tend;       % simulation time (s)

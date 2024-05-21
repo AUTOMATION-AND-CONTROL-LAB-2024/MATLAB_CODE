@@ -1,4 +1,4 @@
-%% Identification of the bias and variance of accelerometer, gyroscope and magnetometer of IMU
+%% Identification of the noise in the IMU produced by the motors
 clear all
 close all
 clc
@@ -27,13 +27,13 @@ dataset = dataset(1:i-1,:);
 
 %% signals extraction   
 time            = dataset(:,1);
+IMU_Tend        = dataset(end,1);
 IMU_a_b         = dataset(:,6:8);
 IMU_w_b         = dataset(:,9:11);
 IMU_mf_b        = dataset(:,18:20);
 phi             = dataset(:,21);
 theta           = dataset(:,22);
 psi             = dataset(:,23);
-IMU_Tend        = dataset(end,1);    
 
 %% extract linear accelerations (a_b) (6,7,8 columns)
 % IMU_a_b_mean = zeros(3,1);  % column vector
@@ -49,13 +49,7 @@ figure(2)
 plot(time,IMU_a_b(:,2));
 figure(3)
 plot(time,IMU_a_b(:,3));
-%%
-figure(1)
-plot(time,phi);    
-figure(2)
-plot(time,theta);
-figure(3)
-plot(time,psi);
+
 %% extract angular velocity (w_b) (9,10,11 columns)
 % IMU_w_b_mean = zeros(3,1);  % column vector
 % IMU_w_b_var  = zeros(3,1);  % column vector
@@ -85,6 +79,14 @@ figure(2)
 plot(time,IMU_mf_b(:,2));
 figure(3)
 plot(time,IMU_mf_b(:,3));
+
+%% plot RPY estimated by EKF
+figure(1)
+plot(time,phi);    
+figure(2)
+plot(time,theta);
+figure(3)
+plot(time,psi);
 
 %% DIVISION NOISE VS NO_NOISE
 nDivision = 3526;
