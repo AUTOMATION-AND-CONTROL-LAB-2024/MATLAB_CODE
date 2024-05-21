@@ -22,7 +22,7 @@ s           =   tf('s');
 Ts_slk      =   0.01;
 Tend_slk    =   400;
 x0          =   [0;0];          % State Equilibrium Vector - Roll angles and rates
-%% Method 1: PID (done together)
+%% PID (done together)
 % G           =   1/0.055/s^2;
 % 
 % kd          =   1;
@@ -33,13 +33,24 @@ x0          =   [0;0];          % State Equilibrium Vector - Roll angles and rat
 % L           =   G*C_matteo;
 % bode(L);
 % grid on;
-% 
-% % C=0.6026*(1+20*s)/(1+0.5*s)^2;
-% % C_disc=c2d(C,Ts_slk);
-% % 
-% % C_cami=(100*s^2)/(s^2+3*s);
-% % C_cami_discr=c2d(C_cami,Ts_slk);
 
+% C=0.6026*(1+20*s)/(1+0.5*s)^2;
+% C_disc=c2d(C,Ts_slk);
+% 
+% C_cami=(100*s^2)/(s^2+3*s);
+% C_cami_discr=c2d(C_cami,Ts_slk);
+
+%% Method 1: PID 
+% G           =   1/0.055/s^2;
+% 
+% % response time: 1
+% % robustness: 0.6
+% % option: Balanced
+% Kp          =   0.0408494379196507*4;
+% Ki          =   0.00382471475812365;
+% Kd          =   0.107131307975801;
+% N           =   10.9079405084324;
+% % possibilità di modificare i requisiti senza troppi problemi
 %% Method 2: Inverse Dynamics
 % G_inverse = 1/s^2;
 % 
@@ -54,19 +65,19 @@ x0          =   [0;0];          % State Equilibrium Vector - Roll angles and rat
 % % In questa modalità satura a 50 e 100 (reference 0) e rigetta pochissimo
 % % Disturbi sinusoidali no
 %% Method 3: H2
-% load("stable_sys_H2_1dof_new_Ixx")
-% 
-% % response time: 2
-% % robustness: 0.9
-% % option: Balanced
-% Kp          =   0.180109037198918;
-% Ki          =   0.150719618455462;
-% Kd          =   0.0291322547663788;
-% N           =   114.28279760416;
+load("stable_sys_H2_1dof_new_Ixx")
 
-% % possibilità di modificare i requisiti senza troppi problemi
+% response time: 2
+% robustness: 0.9
+% option: Balanced
+Kp          =   0.180109037198918;
+Ki          =   0.150719618455462;
+Kd          =   0.0291322547663788;
+N           =   114.28279760416;
+
+% possibilità di modificare i requisiti senza troppi problemi
 %% Method 4: Pole Placement
-% load("stable_sys_H2_1dof_new_Ixx") % G_pole = 1/Ixx/s^2;
+% load("system_lin0_1dof_new_Ixx") % G_pole = 1/Ixx/s^2;
 % Ae      =   [ Alin, zeros(2,1);
 %                 -Clin, zeros(1,1)];
 % Be      =   [Blin 
