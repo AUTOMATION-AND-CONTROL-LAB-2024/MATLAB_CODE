@@ -27,10 +27,12 @@ dataset = dataset(1:i-1,:);
 
 
 %% time extraction
-time = dataset(:,1);
+time        = dataset(:,1);     
+IMU_a_b     = dataset(:,6:8);       % (in dataset are the 6,7,8 columns)
+IMU_w_b     = dataset(:,9:11);      % (in dataset are the 9,10,11 columns)
+IMU_mf_b    = dataset(:,18:20);     % (in dataset are the 16,17,18 columns)
 
-%% extract linear accelerations (a_b) (6,7,8 columns)
-IMU_a_b = dataset(:,6:8);
+%% bias and dvariance in the linear accelerations (a_b) 
 IMU_a_b_mean = zeros(3,1);  % column vector
 IMU_a_b_var  = zeros(3,1);  % column vector
 for i = 1:1:3
@@ -45,8 +47,7 @@ plot(time,IMU_a_b(:,2));
 figure(3)
 plot(time,IMU_a_b(:,3));
 
-%% extract angular velocity (w_b) (9,10,11 columns)
-IMU_w_b = dataset(:,9:11);
+%% bias and viariance in the angular velocity (w_b) 
 IMU_w_b_mean = zeros(3,1);  % column vector
 IMU_w_b_var  = zeros(3,1);  % column vector
 for i = 1:1:3
@@ -61,8 +62,7 @@ plot(time,IMU_w_b(:,2));
 figure(3)
 plot(time,IMU_w_b(:,3));
 
-%% extract magnetic field (mf_b) (16,17,18 columns)
-IMU_mf_b = dataset(:,18:20);
+%% bias and variance in the magnetic field (mf_b) 
 IMU_mf_b_mean = zeros(3,1);  % column vector
 IMU_mf_b_var  = zeros(3,1);  % column vector
 for i = 1:1:3
@@ -77,7 +77,7 @@ plot(time,IMU_mf_b(:,2));
 figure(3)
 plot(time,IMU_mf_b(:,3));
 
-%% extract RPY
+%% bias and variance in the RPY computation
 IMU_RPY_meas = zeros(rows,3);          % IMU_RPY_meas(1,:) = phi(:), IMU_RPY_meas(2,:) = theta(:), IMU_RPY_meas(3,:) = psi(:)
 IMU_RPY_var  = zeros(3,1);
 for i = 1:1:rows
@@ -87,7 +87,7 @@ for i = 1:1:3
     IMU_RPY_var(i,1) = var(IMU_RPY_meas(:,i));
 end
 
-%% IMU acceleration noise analysis
+%% static noise analysis in the linear acceleration fo the IMU
 Ts   = 0.01;            % sampling time of IMU
 Fs   = 1/Ts;            % Sampling period       
 L   = rows;             % Length of signal
@@ -111,7 +111,7 @@ title("Complex Magnitude of fft Spectrum");
 xlabel("f (Hz)");
 ylabel("|fft(spectrum)|");
 % good choice for the filter: cut-off freq = 20:30 Hz
-%% Table 
+%% save the data in a table structure
 ColumnsName = {'IMU_a_b_var', 'IMU_w_b_mean', 'IMU_w_b_var', 'IMU_mf_b_var','IMU_RPY_var'};
 IMU_var_bias = array2table([IMU_a_b_var, IMU_w_b_mean, IMU_w_b_var, IMU_mf_b_var,IMU_RPY_var],'VariableNames', ColumnsName);
 disp(IMU_var_bias);
