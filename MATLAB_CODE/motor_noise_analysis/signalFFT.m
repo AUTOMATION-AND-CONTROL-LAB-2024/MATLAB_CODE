@@ -6,8 +6,8 @@ L    = length(signal);  % Length of signal
 if mod(L,2) ~= 0
     L = L-1;
 end
-
-signal = lowpass(signal,30,Fs);
+signal = signal - mean(signal);
+% signal = lowpass(signal,30,Fs);
 spectrum = fft(signal);
 magnitude = abs(spectrum/L);
 magnitude = magnitude(1:L/2+1);

@@ -6,7 +6,7 @@ clc
 g           =       9.81;                   %  gravity acceleration (m/s^2)
 mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
 %% extraction of signals from Test_RPY_quaternion
-raw_data = load("RAW_DATA\Test_SENSORS_1.mat");
+raw_data = load("RAW_DATA\Test_MOTOR_NOISE.mat");
 signals = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
 [rows,colums] = size(signals);
 
@@ -44,7 +44,7 @@ IMU_yaw_rate    = [time, signals(:,14)];
 Ts_slk      =       0.01;           % sampling time (s)
 Tend_slk    =       IMU_Tend;       % simulation time (s)
 %% IMU parameter loading
-IMU_data = load("IMU_data.mat");
+IMU_data = load("IMUParameters.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
 clear IMU_data;
 
