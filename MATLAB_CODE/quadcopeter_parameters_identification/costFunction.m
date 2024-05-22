@@ -21,7 +21,7 @@ D           = [0];
 nSample     = size(yMeas,2);
 zHat        = zeros(2,nSample);
 yHat        = zeros(2,nSample);
-z0          = [yMeas(1,1); 0];
+z0          = [x(2,1); x(3,1)];
 zHat(:,1)   = z0;
 yHat(:,1)   = C*z0;
 %% run simulation 
@@ -33,8 +33,7 @@ end
 
 %% Error computation
 err = 0;
-yMeas = yMeas + 3.9*pi/180;
 for t = 2:1:nSample
-    err = err + (yMeas(:,t) - yHat(:,t))'*(yMeas(:,t) - yHat(:,t));
+    err = err + (yMeas(1,t) - yHat(1,t))*(yMeas(1,t) - yHat(1,t));
 end
 err = err/nSample;
