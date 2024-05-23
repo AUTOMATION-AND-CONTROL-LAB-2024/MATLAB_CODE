@@ -19,7 +19,7 @@ m           =       0.61+0.064*4;           %  mass (kg)
 param       =       [Ixx;Iyy;Izz;l;k1;k2;k3;k4;b;m];
 
 %% Initial conditions (which correspond to the equilibrium conditions)
-x0          = [1;0]*0.01;          % State Equilibrium Vector - Roll angles and rates
+x0          = [1;0]*0.01;     % State Equilibrium Vector - Roll angles and rates
 tau_eq      = [0];            % Control Input Equilibrium - Roll torque
 
 %% Desired values
@@ -31,17 +31,14 @@ Tend_slk    =       400;               % simulation time (s)
 
 %% VSC
 s=tf('s');
-% load("system_lin0_1dof.mat")
-% Glin= Clin*inv(s*eye(2)-Alin)*Blin; 
-% bode(Glin)
-A   =[0 1;
-      0 0];
-B   =[0;
-      1];
-C   =[66.67 0];
-D   =[0];
-G   = C*inv(s*eye(2)-A)*B+D; 
-% bode(G)
+
+A   =   [0 1;
+        0 0];
+B   =   [0;
+         1];
+C   =   [1/Ixx 0];
+D   =   [0];
+G   =   C*inv(s*eye(2)-A)*B+D; 
 
 % check observability 
 if rank(obsv(A,C))==2
@@ -62,9 +59,9 @@ end
 % W       =   0.2;
 % q       =   7.5e-3*y_des/t_reach+W;
 
-beta1    = 0.15;
-beta_t    =   [beta1 1];
-alpha_t   =   beta_t*A;
+beta1   =   0.3;            % eigenvalue of the system constrained to slide along s=0 
+beta_t  =   [beta1 1];
+alpha_t =   beta_t*A;
 gamma   =   beta1/C(1,1);
 r       =   1;
 t_reach =   1;
@@ -74,20 +71,20 @@ q       =   (abs(beta1*x0(1,1)+x0(1,1)-gamma*y_des)/t_reach)+W;
 
 
 %% parameter uncertainty 
-epsilon     = 100; % più è piccolo, più il transitorio è lento
+epsilon = 13; % più è piccolo, più il transitorio è lento
 
 %% high frequency input switching
+% Building the enlarged system because of the introduction of the integrator
 
-F = [A B;
-    zeros(1,2) zeros(1,1)];
-G = [0;0;1];
-H =[C 0];
+F       =   [A B;
+            zeros(1,2) zeros(1,1)];
+G       =   [0;0;1];
+H       =   [C 0];
 
-beta_t_en   =   [0.25 1 1];
-alpha_t_en   =   beta_t_en*F;
-gamma_en = beta_t_en(1,1)/H(1,1);
-
-q_en       =   (abs(-gamma_en*y_des)/t_reach)+W;
+beta_t_en   =   [0.25 1 1];  % (lambda+0.5)^2 -> eignevalues of the system along s=0
+alpha_t_en  =   beta_t_en*F;
+gamma_en    =   beta_t_en(1,1)/H(1,1);
+q_en        =   (abs(-gamma_en*y_des)/t_reach)+W;
 
 
 % n=2
