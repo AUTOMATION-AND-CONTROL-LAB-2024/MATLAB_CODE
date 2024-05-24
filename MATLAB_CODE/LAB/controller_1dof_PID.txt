@@ -1,0 +1,27 @@
+%% PID Parameters
+
+Ixx         =   0.07;                  %  moment of inertia (kg*m^2)
+Ts_slk      =   0.001;
+s           =   tf('s');
+
+Kc = 1e-0*Ixx;
+tau_i = 0.5;    
+tau_d = 0.5;    
+
+% 0.8 con gain 20
+% 0.4 con gain 45
+% 0.5 con gain 35 molto good
+% 0.2 con gain -
+
+PID = Kc * (tau_i*s+1) * (tau_d*s+1) / (s) / (1+s/130);
+filter = 1/(1+s/120);
+PID_D = c2d(PID, Ts_slk);
+filter_d = c2d(filter, Ts_slk);
+PID_ss      =   ss(PID_D);
+A           =   PID_ss.A;
+B           =   PID_ss.B;
+C           =   PID_ss.C;
+D           =   PID_ss.D;
+
+A_cond      =   A-B*inv(D)*C;
+B_cond      =   B*inv(D);
