@@ -72,12 +72,12 @@ Ts_EKF_meas        = 0.01;     % [s] Ts for measurement update
 
 % RP_EKF
 q_ph        = 40e-0;                 % q-elements related to phi states
-q_th        = 100e-0;                 % q-elements related to theta states
+q_th        = 50e-0;                 % q-elements related to theta states
 q_bias_w_b  = 1e-3;                 % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q_phth      = diag([q_ph,q_th,q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
-r_ph        = 400e-0;                 % variance related to phi computation from IMU measurement
-r_th        = 400e-0;                 % variance related to theta computation from IMU measurement
+r_ph        = 600e-0;                 % variance related to phi computation from IMU measurement
+r_th        = 600e-0;                 % variance related to theta computation from IMU measurement
 R_phth      = diag([r_ph,r_th]);
 
 ph0         = 0;                    % initial guess of phi angle
@@ -96,7 +96,7 @@ P0_phth     = diag([P0_ph,P0_th,P0_bias_wp,P0_bias_wq,P0_bias_wr]);
 
 % Y_EKF
 q_ps        = 100e-0;                    % q-elements related to yaw state
-r_ps        = 250e+0;                    % variance related to psi computation from IMU measurement
+r_ps        = 600e+0;                    % variance related to psi computation from IMU measurement
 x0_ps       = 0;                          % initial guess of psi angle
 P0_ps       = 100;
 
@@ -137,7 +137,7 @@ fprintf('yaw error:   %.2f \n',psi_error);
 fprintf('----------------------------------------- \n');
 
 %% 
-u = [  4 5 6 1 2 3 7 8 9]';
+u = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]';
 [n,~] = size(u);
 n = int32(n/3);
 norm = zeros(n,2);
@@ -156,8 +156,9 @@ for i = 1:n-1
         end
     end
 end
-indexMedian = ceil(n/2);
-median = norm(indexMedian,2);
 norm
+indexMedian = ceil(n/2)
+median = norm(indexMedian,2);
 y = u(median*3-2:median*3)
+
 

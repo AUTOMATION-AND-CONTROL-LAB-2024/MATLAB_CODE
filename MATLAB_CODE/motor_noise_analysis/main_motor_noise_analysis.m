@@ -4,7 +4,7 @@ close all
 clc
 
 %% extraction of measurements from raw_data
-PWM = "700";                                % select the data to analyze PWM = "000" or "100" or ... "700"
+PWM = "600";                                % select the data to analyze PWM = "000" or "100" or ... "700"
 raw_data = load("RAW_DATA/Test_MOTOR_NOISE_" + PWM + "PWM.mat");
 dataset = table2array(raw_data.Acq_Data);   % variable name "Acq_data"
 [rows,colums] = size(dataset);
