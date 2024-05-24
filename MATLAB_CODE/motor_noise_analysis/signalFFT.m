@@ -1,13 +1,13 @@
 function [magnitude,freq] = signalFFT(signal,Ts)
 % signal    = input signal
 % Ts        = sampling time of input signal [s]
-Fs   = 1/Ts;            % Sampling frequency   [Hz]    
-L    = length(signal);  % Length of signal
+
+Fs   = 1/Ts;                                    % Sampling frequency   [Hz]    
+L    = length(signal);                          % Length of signal
 if mod(L,2) ~= 0
-    L = L-1;
+    L = L-1;                                    % make the length of the signal even
 end
-signal = signal - mean(signal);
-% signal = lowpass(signal,30,Fs);
+% signal = signal - mean(signal);                 % remove the mean
 spectrum = fft(signal);
 magnitude = abs(spectrum/L);
 magnitude = magnitude(1:L/2+1);

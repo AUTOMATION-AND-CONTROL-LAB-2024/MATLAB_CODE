@@ -2,47 +2,50 @@
 clear all
 close all
 clc
+
 %%
 g           =       9.81;                   %  gravity acceleration (m/s^2)
 mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
-%% extraction of signals from Test_RPY_quaternion
-raw_data = load("RAW_DATA\Test_MOTOR_NOISE.mat");
-signals = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
-[rows,colums] = size(signals);
+
+%% extraction of dataset from Test_RPY_quaternion
+raw_data = load("RAW_DATA/Test_MOTOR_NOISE_000_700.mat");
+dataset = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
+[rows,colums] = size(dataset);
 
 % delete the first zeros in the dataset
-i=1;
-while(signals(i,2:colums) == zeros(1,colums-1))
-i = i+1;    
-end
-signals = signals(i:rows,:);                     % remove the zeros from dataset
-signals(:,1) = signals(:,1) - signals(1,1);     % shift the time
+% i=1;
+% while(dataset(i,2:colums) == zeros(1,colums-1))
+% i = i+1;    
+% end
+% dataset = dataset(i:rows,:);                     % remove the zeros from dataset
+% dataset(:,1) = dataset(:,1) - dataset(1,1);     % shift the time
+% 
+% % find the other zeros in the dataset
+% for i = 1:1:size(dataset,1)
+%     if dataset(i,2:colums) == zeros(1,colums-1)
+%         break;
+%     end
+% end
+% dataset = dataset(1:i-1,:);
+% [rows,colums] = size(dataset);
 
-% find the other zeros in the dataset
-for i = 1:1:size(signals,1)
-    if signals(i,2:colums) == zeros(1,colums-1)
-        break;
-    end
-end
-signals = signals(1:i-1,:);
-[rows,colums] = size(signals);
+% extraction of dataset
+time            = dataset(:,1);
+IMU_Tend        = dataset(end,1);  
+IMU_a_b         = [time, dataset(:,6:8)];
+IMU_w_b         = [time, dataset(:,9:11)];
+IMU_mf_b        = [time, dataset(:,18:20)];
+IMU_roll        = [time, dataset(:,15)];
+IMU_pitch       = [time, dataset(:,16)];
+IMU_yaw         = [time, dataset(:,17)];
+IMU_roll_rate   = [time, dataset(:,12)];
+IMU_pitch_rate  = [time, dataset(:,13)];
+IMU_yaw_rate    = [time, dataset(:,14)];  
 
-% extraction of signals
-time            = signals(:,1);
-IMU_Tend        = signals(end,1);  
-IMU_a_b         = [time, signals(:,6:8)];
-IMU_w_b         = [time, signals(:,9:11)];
-IMU_mf_b        = [time, signals(:,18:20)];
-IMU_roll        = [time, signals(:,15)];
-IMU_pitch       = [time, signals(:,16)];
-IMU_yaw         = [time, signals(:,17)];
-IMU_roll_rate   = [time, signals(:,12)];
-IMU_pitch_rate  = [time, signals(:,13)];
-IMU_yaw_rate    = [time, signals(:,14)];  
-
-%% Simulation of the model with random parameters
+%% Simulation
 Ts_slk      =       0.01;           % sampling time (s)
 Tend_slk    =       IMU_Tend;       % simulation time (s)
+
 %% IMU parameter loading
 IMU_data = load("IMUParameters.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
@@ -57,7 +60,7 @@ IMU_w_b_variance        = IMU_var_bias_matrix(:,3);         % variance in IMU an
 IMU_mf_b_variance       = ones(3,1)*0.001;                  % variance in IMU magnetic field measurement 
 
 %% RPY computation
-meas_pole               = 15;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
+meas_pole               = 3;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
 
 %% EKF2 parameters
 
@@ -68,13 +71,13 @@ Ts_EKF_meas        = 0.01;     % [s] Ts for measurement update
 % --------------------------------------------------------------------------------------------------------
 
 % RP_EKF
-q_ph        = 90e-0;                 % q-elements related to phi states
-q_th        = 180e-0;                 % q-elements related to theta states
+q_ph        = 40e-0;                 % q-elements related to phi states
+q_th        = 100e-0;                 % q-elements related to theta states
 q_bias_w_b  = 1e-3;                 % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q_phth      = diag([q_ph,q_th,q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
-r_ph        = 80e-0;                 % variance related to phi computation from IMU measurement
-r_th        = 140e-0;                 % variance related to theta computation from IMU measurement
+r_ph        = 400e-0;                 % variance related to phi computation from IMU measurement
+r_th        = 400e-0;                 % variance related to theta computation from IMU measurement
 R_phth      = diag([r_ph,r_th]);
 
 ph0         = 0;                    % initial guess of phi angle
@@ -85,15 +88,15 @@ bias_wr0    = IMU_w_b_bias(3,1);    % initial guess of bias in r direction (of v
 x0_phth     = [ph0;th0;bias_wp0;bias_wq0;bias_wr0];
 
 P0_ph       = 100;
-P0_th       = 100;
+P0_th       = 400;
 P0_bias_wp  = IMU_w_b_variance(1,1);
 P0_bias_wq  = IMU_w_b_variance(2,1);
 P0_bias_wr  = IMU_w_b_variance(3,1);
 P0_phth     = diag([P0_ph,P0_th,P0_bias_wp,P0_bias_wq,P0_bias_wr]);
 
 % Y_EKF
-q_ps        = 170e-0;                    % q-elements related to yaw state
-r_ps        = 200e+0;                    % variance related to psi computation from IMU measurement
+q_ps        = 100e-0;                    % q-elements related to yaw state
+r_ps        = 250e+0;                    % variance related to psi computation from IMU measurement
 x0_ps       = 0;                          % initial guess of psi angle
 P0_ps       = 100;
 
@@ -132,3 +135,29 @@ fprintf('roll error:  %.2f \n',phi_error);
 fprintf('pitch error: %.2f \n',theta_error);
 fprintf('yaw error:   %.2f \n',psi_error);
 fprintf('----------------------------------------- \n');
+
+%% 
+u = [  4 5 6 1 2 3 7 8 9]';
+[n,~] = size(u);
+n = int32(n/3);
+norm = zeros(n,2);
+for i = 1:1:n
+    u_vect      = u(i*3-2:i*3,1); 
+    norm(i,1)   = sqrt(u_vect'*u_vect);     % norm
+    norm(i,2)   = i;                        % index
+end
+for i = 1:n-1
+    for j = 1:n-i
+        if norm(j,1) > norm(j+1,1)
+            % Swap elements
+            temp = norm(j,:);
+            norm(j,:) = norm(j+1,:);
+            norm(j+1,:) = temp;
+        end
+    end
+end
+indexMedian = ceil(n/2);
+median = norm(indexMedian,2);
+norm
+y = u(median*3-2:median*3)
+
