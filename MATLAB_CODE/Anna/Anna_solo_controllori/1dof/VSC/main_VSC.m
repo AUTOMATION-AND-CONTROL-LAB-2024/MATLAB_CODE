@@ -6,7 +6,7 @@ clc
 %% Model parameters 
 g           =       9.81;                   %  gravity acceleration (m/s^2)
 mf          =       [22602; 0; -42062];     %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
-Ixx         =       0.015;                  %  moment of inertia (kg*m^2)
+Ixx         =       1;                  %  moment of inertia (kg*m^2)
 Iyy         =       0.015;                  %  moment of inertia (kg*m^2)
 Izz         =       0.03;                   %  moment of inertia (kg*m^2)
 l           =       0.25;                   %  quadcopter arm (m)
@@ -81,7 +81,7 @@ F       =   [A B;
 G       =   [0;0;1];
 H       =   [C 0];
 
-beta_t_en   =   [0.25 1 1];  % (lambda+0.5)^2 -> eignevalues of the system along s=0
+beta_t_en   =   [64 16 1];  % (lambda+0.5)^2 -> eignevalues of the system along s=0
 alpha_t_en  =   beta_t_en*F;
 gamma_en    =   beta_t_en(1,1)/H(1,1);
 q_en        =   (abs(-gamma_en*y_des)/t_reach)+W;
