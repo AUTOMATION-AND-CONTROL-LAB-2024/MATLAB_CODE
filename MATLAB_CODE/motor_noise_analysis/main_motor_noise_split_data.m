@@ -5,10 +5,10 @@ clc
 
 %% extraction of measurements from raw_data
 raw_data = load("RAW_DATA/Test_MOTOR_NOISE_000_700.mat");
-dataset = table2array(raw_data.Acq_Data);   % variable name "Acq_data"
+dataset  = table2array(raw_data.Acq_Data);   % variable name "Acq_data"
 [rows,colums] = size(dataset);
 
-%% signals extraction   
+%% signals division   
 time            = dataset(:,1);
 samples         = 1:1:length(time);
 IMU_Tend        = dataset(end,1);
@@ -48,17 +48,17 @@ nf = nf700;
 PWM = "700";
 
 datasetSection       = dataset(ni:nf,:);                             % select the time interval
-datasetSection(:,1)  = datasetSection(:,1) - datasetSection(1,1);    % shift the time time = datasetSection(:,1)
+datasetSection(:,1)  = datasetSection(:,1) - datasetSection(1,1);    % shift the time, time = datasetSection(:,1)
 
+% save the dataset into a file
 colNames = {'time','PWM1','PWM2','PWM3','PWM4','a_b_x','a_b_y','a_b_z','w_b_p','w_b_q','w_b_r','Roll_rate','Pitch_rate','Yaw_rate','Roll','Pitch','Yaw','mf_b_x','mf_b_y','mf_b_z','phi','theta','psi', 'phi_rate','theta_rate','psi_rate'};
 Acq_Data = array2table(datasetSection,'VariableNames',colNames);
 filename = "RAW_DATA/Test_"+"MOTOR_NOISE_" + PWM +"PWM";
 save(filename, "Acq_Data")
 
 % check the result
-
 raw_data2 = load("RAW_DATA/Test_MOTOR_NOISE_" + PWM +"PWM.mat");
-dataset2 = table2array(raw_data2.Acq_Data);   % variable name "Acq_data"
+dataset2  = table2array(raw_data2.Acq_Data);   % variable name "Acq_data"
 time2               = dataset2(:,1);
 IMU_a_b2            = zeros(rows,3);
 IMU_a_b2(ni:nf,:)   = dataset2(:,6:8);
