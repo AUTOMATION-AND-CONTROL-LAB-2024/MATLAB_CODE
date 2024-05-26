@@ -5,7 +5,7 @@ clc
 %% General data
 g           =       9.81;                   %  gravity acceleration (m/s^2)
 mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
-Ixx         =       0.055;                  %  moment of inertia (kg*m^2)
+Ixx         =       0.07;                  %  moment of inertia (kg*m^2)
 Iyy         =       0.055;                  %  moment of inertia (kg*m^2)
 Izz         =       0.03;                   %  moment of inertia (kg*m^2)
 l           =       0.25;                   %  quadcopter arm (m)
@@ -65,26 +65,57 @@ x0          =   [0;0];          % State Equilibrium Vector - Roll angles and rat
 % % In questa modalità satura a 50 e 100 (reference 0) e rigetta pochissimo
 % % Disturbi sinusoidali no
 %% Method 3: H2
-load("stable_sys_H2_1dof_new_Ixx")
-
-% response time: 2
-% robustness: 0.9
-% option: Balanced
-Kp          =   0.180109037198918;
-Ki          =   0.150719618455462;
-Kd          =   0.0291322547663788;
-N           =   114.28279760416;
-
-% possibilità di modificare i requisiti senza troppi problemi
+% load("stable_sys_H2_1dof_new_Ixx")
+% 
+% % response time: 2
+% % robustness: 0.9
+% % option: Balanced
+% Kp          =   0.180109037198918;
+% Ki          =   0.150719618455462;
+% Kd          =   0.0291322547663788;
+% N           =   114.28279760416;
+% 
+% % possibilità di modificare i requisiti senza troppi problemi
 %% Method 4: Pole Placement
-% load("system_lin0_1dof_new_Ixx") % G_pole = 1/Ixx/s^2;
-% Ae      =   [ Alin, zeros(2,1);
-%                 -Clin, zeros(1,1)];
-% Be      =   [Blin 
-%             zeros(1,1)];
-% 
-% K       =   place(Ae,Be,[-0.8 -0.9 -1]); 
-% 
-% Kx      =   K(:,1:2);
-% Kv      =   K(:,3);
+% G = 1/Ixx/s^2;
+% ss(G)
+% Alin=[0 0;1 0];
+% Blin=[4 ;0];
+% Clin=[0 3.571];
+% Dlin=0;
+load("system_lin0_1dof_new_Ixx.mat")
+Ae      =   [ Alin, zeros(2,1);
+                -Clin, zeros(1,1)];
+Be      =   [Blin 
+            zeros(1,1)];
+filter = 1/(1+s/120);
+% filter = 1/(1+s/320);
+filter_d = c2d(filter, Ts_slk);
+% K       =   place(Ae,Be,[-0.08 -0.09 -100]); 
+% K       =   place(Ae,Be,[-0.11 -0.12 -100]); 
+% K       =   place(Ae,Be,[-300 -300.1 -400]);
+K       =   place(Ae,Be,[-0.0877 -4.0638 -4.06381]); 
 
+
+Kx      =   K(:,1:2);
+Kv      =   K(:,3);
+
+% % Calcoli per trovare la sua L(s)
+% % provo con linearizzazione
+% sim('Prova_slk.slx',Tend_slk);
+% 
+% mdl         = 'Prova_slk';
+% open_system(mdl)
+% blockpath   = 'Prova_slk/L';
+% linsys      = linearize(mdl,blockpath);
+% 
+% A_L=linsys.A;
+% B_L=linsys.B;
+% C_L=linsys.C;
+% D_L=linsys.D;
+% 
+% L=(C_L*inv(s*eye(4)-A_L)*B_L+D_L);
+% R_pole=L/G
+% bode(L)
+% zeros_L= roots([1.141e-06 0.0001358 - 0.000137 - 6.951e-16])
+% poles_L= roots([120 -320 293.4 -106.7 13.27])

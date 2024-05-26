@@ -64,11 +64,11 @@ if rank(ctrb(Ae,Be))==3
     fprintf('The enlarged system is controllable\n ')
 end
   
-K       =   place(Ae,Be,[-0.11 -0.12 -0.13]);
-
-Kx      =   K(:,1:2);
-Kv      =   K(:,3);
-save("K_pole_1dof_new_Ixx","Kx","Kv")
+% K       =   place(Ae,Be,[-0.11 -0.12 -0.13]);
+% 
+% Kx      =   K(:,1:2);
+% Kv      =   K(:,3);
+load("K_pole_1dof_new_Ixx","Kx","Kv")
 
 % open("pole_placement_1dof.slx")
 % sim("pole_placement_1dof.slx",Tend_slk)
