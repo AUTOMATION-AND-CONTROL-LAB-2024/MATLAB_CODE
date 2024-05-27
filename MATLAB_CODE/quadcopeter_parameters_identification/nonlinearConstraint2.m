@@ -12,6 +12,9 @@ zHat2       = zHat(2,:);
 ceq1        = (z1 - zHat1)';
 ceq2        = (z2 - zHat2)';
 
-c           = (-0.1 - yHat)';
+cmax        = (+yHat - (+0.0873))';
+cmin        = (-yHat + (-0.0001))';
+
+c           = [cmax;cmin];
 ceq         = [ceq1;ceq2;];
 end

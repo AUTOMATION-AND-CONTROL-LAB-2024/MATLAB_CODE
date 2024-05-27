@@ -1,4 +1,4 @@
-%% EKF Main
+%% Main - EKF 2.0
 clear all
 close all
 clc
@@ -60,24 +60,24 @@ IMU_w_b_variance        = IMU_var_bias_matrix(:,3);         % variance in IMU an
 IMU_mf_b_variance       = ones(3,1)*0.001;                  % variance in IMU magnetic field measurement 
 
 %% RPY computation
-meas_pole               = 3;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
-
+acc_pole                = 2;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
+vel_pole                = 20;
 %% EKF2 parameters
 
 % --------------------------------------------------------------------------------------------------------
 % oss: Ts_EKF_meas must be a multiple of Ts_EKF_integr, example: Ts_EKF_meas = 10 * Ts_EKF_integr
-Ts_EKF_integr      = 0.0001;     % [s] Ts for the ODE integration 
-Ts_EKF_meas        = 0.01;     % [s] Ts for measurement update
+Ts_EKF_integr      = 0.001;     % [s] Ts for the ODE integration 
+Ts_EKF_meas        = 0.01;       % [s] Ts for measurement update
 % --------------------------------------------------------------------------------------------------------
 
 % RP_EKF
-q_ph        = 40e-0;                 % q-elements related to phi states
-q_th        = 50e-0;                 % q-elements related to theta states
+q_ph        = 200e-0;                 % q-elements related to phi states
+q_th        = 200e-0;                 % q-elements related to theta states
 q_bias_w_b  = 1e-3;                 % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q_phth      = diag([q_ph,q_th,q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
-r_ph        = 600e-0;                 % variance related to phi computation from IMU measurement
-r_th        = 600e-0;                 % variance related to theta computation from IMU measurement
+r_ph        = 800e-0;                 % variance related to phi computation from IMU measurement
+r_th        = 800e-0;                 % variance related to theta computation from IMU measurement
 R_phth      = diag([r_ph,r_th]);
 
 ph0         = 0;                    % initial guess of phi angle
@@ -87,8 +87,8 @@ bias_wq0    = IMU_w_b_bias(2,1);    % initial guess of bias in q direction (of v
 bias_wr0    = IMU_w_b_bias(3,1);    % initial guess of bias in r direction (of vector w angular velocity) can be estimated with measurements
 x0_phth     = [ph0;th0;bias_wp0;bias_wq0;bias_wr0];
 
-P0_ph       = 100;
-P0_th       = 400;
+P0_ph       = 200;
+P0_th       = 800;
 P0_bias_wp  = IMU_w_b_variance(1,1);
 P0_bias_wq  = IMU_w_b_variance(2,1);
 P0_bias_wr  = IMU_w_b_variance(3,1);
@@ -136,29 +136,5 @@ fprintf('pitch error: %.2f \n',theta_error);
 fprintf('yaw error:   %.2f \n',psi_error);
 fprintf('----------------------------------------- \n');
 
-%% 
-u = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]';
-[n,~] = size(u);
-n = int32(n/3);
-norm = zeros(n,2);
-for i = 1:1:n
-    u_vect      = u(i*3-2:i*3,1); 
-    norm(i,1)   = sqrt(u_vect'*u_vect);     % norm
-    norm(i,2)   = i;                        % index
-end
-for i = 1:n-1
-    for j = 1:n-i
-        if norm(j,1) > norm(j+1,1)
-            % Swap elements
-            temp = norm(j,:);
-            norm(j,:) = norm(j+1,:);
-            norm(j+1,:) = temp;
-        end
-    end
-end
-norm
-indexMedian = ceil(n/2)
-median = norm(indexMedian,2);
-y = u(median*3-2:median*3)
 
 
