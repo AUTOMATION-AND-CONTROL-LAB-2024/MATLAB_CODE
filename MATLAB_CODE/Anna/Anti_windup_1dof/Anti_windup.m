@@ -255,9 +255,10 @@ Ts_slk      =   0.001;
 
 
 load("stable_sys_H2_1dof_new_Ixx")
-filter = 35/(1+s/120);
+load("K_H2_1dof_new_Ixx.mat")
+filter =62.5/(1+s/120); % con 62.5 la L è identica
 filter_d = c2d(filter, Ts_slk);
-R_H2= filter*(s+2)^2/(s+130)/s^3*(s^2+3.279*s+3.211)
+R_H2= filter*(s+2)^2/(s+130)/s^3*(s^2+3.279*s+3.211);
 L_H2 =R_H2*stable_sys;
 figure(7)
 bode(L_H2)  % you can see it's the same of PID and pole
