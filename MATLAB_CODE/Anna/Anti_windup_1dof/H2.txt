@@ -20,3 +20,5 @@ D           =   R_final_ss.D;
 
 A_cond      =   A-B*inv(D)*C;
 B_cond      =   B*inv(D);
+
+load("K_H2_1dof_new_Ixx.mat")
