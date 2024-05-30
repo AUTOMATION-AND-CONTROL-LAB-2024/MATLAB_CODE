@@ -1,0 +1,6 @@
+Test_H2_1dof_pitch_dist		-> (-1)*(pitch + 1.4*pi/180) [rad]
+Test_H2_1dof_pitch_step		-> (-1)*(pitch + 1.4*pi/180) [rad]
+Test_PID_1dof_pitch_step	-> (-1)*(pitch + 2*pi/180) [rad]
+Test_PID_1dof_roll_sinewave	-> roll + 1*pi/180 [rad]
+Test_PID_1dof_roll_step_dist	-> roll + 3.9*pi/180 [rad]
+Test_PP_1dof_pitch_step_dist	-> (-1)*(pitch + 2*pi/180) [rad]
