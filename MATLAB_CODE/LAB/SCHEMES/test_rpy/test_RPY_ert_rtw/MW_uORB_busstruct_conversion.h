@@ -1,0 +1,14 @@
+#ifndef _MW_UORB_BUSSTRUCT_CONVERSION_H_
+#define _MW_UORB_BUSSTRUCT_CONVERSION_H_
+
+#include <uORB/topics/actuator_outputs.h>
+#include <uORB/topics/sensor_accel.h>
+#include <uORB/topics/sensor_gyro.h>
+#include <uORB/topics/sensor_mag.h>
+
+typedef struct actuator_outputs_s  px4_Bus_actuator_outputs ;
+typedef struct sensor_accel_s  px4_Bus_sensor_accel ;
+typedef struct sensor_gyro_s  px4_Bus_sensor_gyro ;
+typedef struct sensor_mag_s  px4_Bus_sensor_mag ;
+
+#endif

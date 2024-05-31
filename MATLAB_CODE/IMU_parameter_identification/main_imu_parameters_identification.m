@@ -5,11 +5,11 @@ clc
 %% extraction of measurements from raw_data
 raw_data = load("RAW_DATA/STATIC_SENSORS.mat");
 dataset = table2array(raw_data.Acq_Data);   % variable name "Acq_data"
-[rows,colums] = size(dataset);
+[rows,columns] = size(dataset);
 
 % delete the first zeros in the dataset
 i=1;
-while(dataset(i,2:colums) == zeros(1,colums-1))
+while(dataset(i,2:columns) == zeros(1,columns-1))
 i = i+1;    
 end
 dataset = dataset(i:rows,:);                    % remove the zeros from dataset
@@ -17,13 +17,13 @@ dataset(:,1) = dataset(:,1) - dataset(1,1);     % shift the time
 
 % find the other zeros in the dataset
 for i = 1:1:size(dataset,1)
-    if dataset(i,2:colums) == zeros(1,colums-1)
+    if dataset(i,2:columns) == zeros(1,columns-1)
         break;
     end
 end
 dataset = dataset(1:i-1,:);
 
-[rows,colums] = size(dataset);
+[rows,columns] = size(dataset);
 
 %% signals division
 time            = dataset(:,1);     
@@ -35,16 +35,16 @@ IMU_mf_b        = dataset(:,18:20);     % (in dataset are the 16,17,18 columns)
 IMU_a_b_mean = zeros(3,1);  % column vector
 IMU_a_b_var  = zeros(3,1);  % column vector
 for i = 1:1:3
-    IMU_a_b_mean(i,1) = mean(IMU_a_b(i));
-    IMU_a_b_var(i,1)  = var(IMU_a_b(i));
+    IMU_a_b_mean(i,1) = mean(IMU_a_b(:,i));
+    IMU_a_b_var(i,1)  = var(IMU_a_b(:,i));
 end
 
 %% bias and viariance of angular velocity (w_b) 
 IMU_w_b_mean = zeros(3,1);  % column vector
 IMU_w_b_var  = zeros(3,1);  % column vector
 for i = 1:1:3
-    IMU_w_b_mean(i,1) = mean(IMU_w_b(i));
-    IMU_w_b_var(i,1)  = var(IMU_w_b(i));
+    IMU_w_b_mean(i,1) = mean(IMU_w_b(:,i));
+    IMU_w_b_var(i,1)  = var(IMU_w_b(:,i));
 end
 
 %% bias and variance of magnetic field (mf_b) 
@@ -55,19 +55,7 @@ for i = 1:1:3
     IMU_mf_b_var(i,1)  = var(IMU_mf_b(:,i));
 end
 
-%% plot signals
-signal = IMU_a_b;
-% signal = IMU_w_b;
-% signal = IMU_mf_b_mean;
-
-figure(1)
-plot(time,signal(:,1));    
-figure(2)
-plot(time,signal(:,2));
-figure(3)
-plot(time,signal(:,3));
-
-%% bias and variance of RPY computation
+%% variance of RPY computation
 IMU_RPY_meas = zeros(rows,3);          % IMU_RPY_meas(1,:) = phi(:), IMU_RPY_meas(2,:) = theta(:), IMU_RPY_meas(3,:) = psi(:)
 IMU_RPY_var  = zeros(3,1);
 for i = 1:1:rows
@@ -77,32 +65,24 @@ for i = 1:1:3
     IMU_RPY_var(i,1) = var(IMU_RPY_meas(:,i));
 end
 
-%% static noise analysis in the linear acceleration fo the IMU
-Ts   = 0.01;            % sampling time of IMU
-Fs   = 1/Ts;            % Sampling period       
-L   = rows;             % Length of signal
-time = (0:L-1)*Ts;      % Time vector
-freq = Fs/L*(0:(L/2));
+%% signals plot
+signal = IMU_a_b;
+% signal = IMU_w_b;
+% signal = IMU_mf_b_mean;
 
-spectrum = zeros(ceil(L/2),3);
-freq = freq(1:size(spectrum,1));
-for i = 1:1:3
-    signal = IMU_a_b(:,i);
-    signal = lowpass(signal,Fs/2.01,Fs);
-    signal = fft(signal);
-    signal = abs(signal/L);
-    signal = signal(1:ceil(L/2));
-    signal(2:end-1) = 2*signal(2:end-1);
-    spectrum(:,i) = signal;
-end
+figure(1)
+subplot(3,1,1)
+plot(time,signal(:,1)); 
+grid on; title("x - component"); xlabel("time [s]");
+subplot(3,1,2)
+plot(time,signal(:,2));
+grid on; title("y - component"); xlabel("time [s]");
+subplot(3,1,3)
+plot(time,signal(:,3));
+grid on; title("z - component"); xlabel("time [s]");
 
-plot(freq(2:end),spectrum(2:end,3),"LineWidth",2);  % a_b(1) -> spectrum(:,1)  a_b(2) -> spectrum(:,2)  a_b(3) -> spectrum(:,3)
-title("Complex Magnitude of fft Spectrum");
-xlabel("f (Hz)");
-ylabel("|fft(spectrum)|");
-% good choice for the filter: cut-off freq = 20:30 Hz
 %% save the data in a table structure
 ColumnsName = {'IMU_a_b_var', 'IMU_w_b_mean', 'IMU_w_b_var', 'IMU_mf_b_var','IMU_RPY_var'};
 IMU_var_bias = array2table([IMU_a_b_var, IMU_w_b_mean, IMU_w_b_var, IMU_mf_b_var,IMU_RPY_var],'VariableNames', ColumnsName);
 disp(IMU_var_bias);
-save("IMUParameters","IMU_var_bias");
+% save("IMUParameters","IMU_var_bias");
