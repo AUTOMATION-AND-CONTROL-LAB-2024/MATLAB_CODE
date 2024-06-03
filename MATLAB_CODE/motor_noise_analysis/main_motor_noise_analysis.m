@@ -4,7 +4,7 @@ close all
 clc
 
 %% extraction of measurements from raw_data
-PWM = "100";                                % select the data to analyze PWM = "000" or "100" or ... "700"
+PWM = "500";                                % select the data to analyze PWM = "000" or "100" or ... "700"
 raw_data = load("RAW_DATA/Test_MOTOR_NOISE_" + PWM + "PWM.mat");
 dataset = table2array(raw_data.Acq_Data);   % variable name "Acq_data"
 [rows,columns] = size(dataset);
@@ -124,7 +124,7 @@ for i = 1:1:3
     end
     figure()
     sgtitle("frequency-domain analysis");
-    subplot(3,1,1);
+    % subplot(2,1,1);
     plot(freq_origin{1,i}(firstHarmonic:end),magn_origin{1,i}(firstHarmonic:end),"LineWidth",1);
     title(sprintf("component %s: Magnitude of fft Spectrum - original ",component));
     xlabel("f (Hz)");
@@ -132,19 +132,19 @@ for i = 1:1:3
     xlim([0 Fs/2]); % Set the x-axis limits
     ylim([0 max(magn_origin{1,i}(firstHarmonic:end))]); % Set the y-axis limits
     
-    subplot(3,1,2);
-    plot(freq_Nyquist{1,i}(firstHarmonic:end),magn_Nyquist{1,i}(firstHarmonic:end),"LineWidth",1);
-    title(sprintf("component %s: Magnitude of fft Spectrum - filtered at %d Hz",component,Fs/2));
-    xlabel("f (Hz)");
-    ylabel("|fft(spectrum)|");
-    xlim([0 Fs/2]); % Set the x-axis limits
-    ylim([0 max(magn_origin{1,i}(firstHarmonic:end))]); % Set the y-axis limits
+    % subplot(3,1,2);
+    % plot(freq_Nyquist{1,i}(firstHarmonic:end),magn_Nyquist{1,i}(firstHarmonic:end),"LineWidth",1);
+    % title(sprintf("component %s: Magnitude of fft Spectrum - filtered at %d Hz",component,Fs/2));
+    % xlabel("f (Hz)");
+    % ylabel("|fft(spectrum)|");
+    % xlim([0 Fs/2]); % Set the x-axis limits
+    % ylim([0 max(magn_origin{1,i}(firstHarmonic:end))]); % Set the y-axis limits
     
-    subplot(3,1,3);
-    plot(freq_filtered{1,i}(firstHarmonic:end),magn_filtered{1,i}(firstHarmonic:end),"LineWidth",1);
-    title(sprintf("component %s: Magnitude of fft Spectrum - filtered at %d Hz",component,filter_pole));
-    xlabel("f (Hz)");
-    ylabel("|fft(spectrum)|");
-    xlim([0 Fs/2]); % Set the x-axis limits
-    ylim([0 max(magn_origin{1,i}(firstHarmonic:end))]); % Set the y-axis limits
+    % subplot(2,1,2);
+    % plot(freq_filtered{1,i}(firstHarmonic:end),magn_filtered{1,i}(firstHarmonic:end),"LineWidth",1);
+    % title(sprintf("component %s: Magnitude of fft Spectrum - filtered at %d Hz",component,filter_pole));
+    % xlabel("f (Hz)");
+    % ylabel("|fft(spectrum)|");
+    % xlim([0 Fs/2]); % Set the x-axis limits
+    % ylim([0 max(magn_origin{1,i}(firstHarmonic:end))]); % Set the y-axis limits
 end

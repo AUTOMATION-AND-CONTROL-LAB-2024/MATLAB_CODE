@@ -47,7 +47,7 @@ Ts_slk      =       0.01;           % sampling time (s)
 Tend_slk    =       IMU_Tend;       % simulation time (s)
 
 %% IMU parameter loading
-IMU_data = load("IMU_data.mat");
+IMU_data = load("IMUParameters.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
 clear IMU_data;
 
