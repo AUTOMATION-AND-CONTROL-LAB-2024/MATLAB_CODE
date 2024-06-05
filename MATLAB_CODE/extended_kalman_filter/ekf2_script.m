@@ -8,7 +8,7 @@ g           =       9.81;                   %  gravity acceleration (m/s^2)
 mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
 
 %% extraction of dataset from Test_RPY_quaternion
-raw_data = load("RAW_DATA/Test_SENSORS_3.mat");
+raw_data = load("RAW_DATA/Test_SENSORS_2.mat");
 dataset = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
 [rows,colums] = size(dataset);
 
@@ -30,8 +30,8 @@ dataset = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
 % [rows,colums] = size(dataset);
 
 % extraction of dataset
-time            = dataset(:,1);
-IMU_Tend        = dataset(end,1);  
+time            = dataset(:,1) - dataset(1,1);
+IMU_Tend        = time(end,1);  
 IMU_a_b         = [time, dataset(:,6:8)];
 IMU_w_b         = [time, dataset(:,9:11)];
 IMU_mf_b        = [time, dataset(:,18:20)];
@@ -72,12 +72,12 @@ Ts_EKF_meas        = 0.01;       % [s] Ts for measurement update
 
 % RP_EKF
 q_ph        = 630e-0;                 % q-elements related to phi states
-q_th        = 1300e-0;                 % q-elements related to theta states
+q_th        = 700e-0;                 % q-elements related to theta states
 q_bias_w_b  = 1e-7;                 % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q_phth      = diag([q_ph,q_th,q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
 r_ph        = 400e-0;                 % variance related to phi computation from IMU measurement
-r_th        = 900e-0;                 % variance related to theta computation from IMU measurement
+r_th        = 600e-0;                 % variance related to theta computation from IMU measurement
 R_phth      = diag([r_ph,r_th]);
 
 ph0         = 0;                    % initial guess of phi angle
@@ -88,7 +88,7 @@ bias_wr0    = IMU_w_b_bias(3,1);    % initial guess of bias in r direction (of v
 x0_phth     = [ph0;th0;bias_wp0;bias_wq0;bias_wr0];
 
 P0_ph       = 200;
-P0_th       = 800;
+P0_th       = 600;
 P0_bias_wp  = IMU_w_b_variance(1,1);
 P0_bias_wq  = IMU_w_b_variance(2,1);
 P0_bias_wr  = IMU_w_b_variance(3,1);
@@ -137,14 +137,62 @@ fprintf('yaw error:   %.2f \n',psi_error);
 fprintf('----------------------------------------- \n');
 
 %% Plots
-figure()
-sgtitle("EKF simulation");
-subplot(3,1,1)
-plot(time,[phi_estim(1:N),IMU_roll(1:N,2)*180/pi]);
+close all;
+ni = 50/Ts_slk;
+nf = 67/Ts_slk;
+% figure()
+% sgtitle("EKF simulation");
+
+% Create the figure and set its background color
+fig = figure();
+fig.Color = [1, 1, 1]; % White background
+
+% Create the plot
+plot(time(ni:nf), [phi_estim(ni:nf), IMU_roll(ni:nf,2)] * 180 / pi, 'LineWidth', 1.3);
 grid on;
-title("roll angle");
-xlabel("time [s]");
-ylabel(" roll [deg]");
-legend("EKF_roll","IMU_roll");
+
+% Get handle to the current axes
+ax = gca;
+
+% Set the background color of the axes (area inside the plot)
+ax.Color = [1, 1, 1]; % White background
+
+% Set the interpreters to 'latex'
+ax.XLabel.Interpreter = 'latex';
+ax.YLabel.Interpreter = 'latex';
+ax.Title.Interpreter = 'latex';
+
+% Adjust the font sizes
+ax.XLabel.FontSize = 40; % Adjust the font size as needed
+ax.YLabel.FontSize = 60; % Adjust the font size as needed
+ax.Title.FontSize = 40;  % Adjust the font size as needed
+
+% Set the title and labels
+title('Roll Angle');
+xlabel('Time [s]',FontSize = 15);
+ylabel('Roll [deg]',FontSize = 15);
+
+% Set the legend and x-axis limit
+legend('Roll_{EKF}', 'Roll_{IMU}');
+xlim([ni, nf] * Ts_slk);
 
 
+
+
+figure()
+plot(time(ni:nf),[theta_estim(ni:nf),IMU_pitch(ni:nf,2)]*180/pi,'LineWidth',1.3);
+grid on;
+ax = gca;
+set(ax.XLabel, 'Interpreter', 'latex'); set(ax.YLabel, 'Interpreter', 'latex'); set(ax.Title, 'Interpreter', 'latex');
+title("pitch angle");
+xlabel("time [s]"); ylabel("pitch [deg]"); legend("EKF-pitch","IMU-pitch");
+xlim([ni,nf]*Ts_slk);
+
+figure()
+plot(time(ni:nf),[psi_estim(ni:nf),IMU_yaw(ni:nf,2)]*180/pi,'LineWidth',1.3);
+grid on;
+ax = gca;
+set(ax.XLabel, 'Interpreter', 'latex'); set(ax.YLabel, 'Interpreter', 'latex'); set(ax.Title, 'Interpreter', 'latex');
+title("yaw angle");
+xlabel("time [s]"); ylabel("yaw [deg]"); legend("EKF-yaw","IMU-yaw");
+xlim([ni,nf]*Ts_slk);
