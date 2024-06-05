@@ -60,7 +60,7 @@ IMU_w_b_variance        = IMU_var_bias_matrix(:,3);         % variance in IMU an
 IMU_mf_b_variance       = ones(3,1)*0.001;                  % variance in IMU magnetic field measurement 
 
 %% RPY computation
-acc_pole                = 2;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
+acc_pole                = 10;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
 vel_pole                = 20;
 %% EKF2 parameters
 
@@ -136,5 +136,15 @@ fprintf('pitch error: %.2f \n',theta_error);
 fprintf('yaw error:   %.2f \n',psi_error);
 fprintf('----------------------------------------- \n');
 
+%% Plots
+figure()
+sgtitle("EKF simulation");
+subplot(3,1,1)
+plot(time,[phi_estim(1:N),IMU_roll(1:N,2)*180/pi]);
+grid on;
+title("roll angle");
+xlabel("time [s]");
+ylabel(" roll [deg]");
+legend("EKF_roll","IMU_roll");
 
 
