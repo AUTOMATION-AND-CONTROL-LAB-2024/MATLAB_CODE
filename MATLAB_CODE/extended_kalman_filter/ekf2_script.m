@@ -125,6 +125,9 @@ P0_rate          = diag([P0_ph_rate,P0_th_rate,P0_ps_rate]);
 phi_estim       = out.simout(:,1);
 theta_estim     = out.simout(:,2);
 psi_estim       = out.simout(:,3);
+phiRate_estim   = out.simout(:,4);
+thetaRate_estim = out.simout(:,5);
+psiRate_estim   = out.simout(:,6);
 
 N               = length(phi_estim);
 phi_error       = sqrt((IMU_roll(:,2) - phi_estim)'*(IMU_roll(:,2) - phi_estim)/N);
@@ -137,49 +140,19 @@ fprintf('yaw error:   %.2f \n',psi_error);
 fprintf('----------------------------------------- \n');
 
 %% Plots
-close all;
-ni = 50/Ts_slk;
-nf = 67/Ts_slk;
-% figure()
-% sgtitle("EKF simulation");
-
-% Create the figure and set its background color
-fig = figure();
-fig.Color = [1, 1, 1]; % White background
-
-% Create the plot
-plot(time(ni:nf), [phi_estim(ni:nf), IMU_roll(ni:nf,2)] * 180 / pi, 'LineWidth', 1.3);
-grid on;
-
-% Get handle to the current axes
-ax = gca;
-
-% Set the background color of the axes (area inside the plot)
-ax.Color = [1, 1, 1]; % White background
-
-% Set the interpreters to 'latex'
-ax.XLabel.Interpreter = 'latex';
-ax.YLabel.Interpreter = 'latex';
-ax.Title.Interpreter = 'latex';
-
-% Adjust the font sizes
-ax.XLabel.FontSize = 40; % Adjust the font size as needed
-ax.YLabel.FontSize = 60; % Adjust the font size as needed
-ax.Title.FontSize = 40;  % Adjust the font size as needed
-
-% Set the title and labels
-title('Roll Angle');
-xlabel('Time [s]',FontSize = 15);
-ylabel('Roll [deg]',FontSize = 15);
-
-% Set the legend and x-axis limit
-legend('Roll_{EKF}', 'Roll_{IMU}');
-xlim([ni, nf] * Ts_slk);
-
-
-
+close all
 
 figure()
+subplot(3,1,1)
+plot(time(ni:nf),[phi_estim(ni:nf),IMU_roll(ni:nf,2)]*180/pi,'LineWidth',1.3);
+grid on;
+ax = gca;
+set(ax.XLabel, 'Interpreter', 'latex'); set(ax.YLabel, 'Interpreter', 'latex'); set(ax.Title, 'Interpreter', 'latex');
+title("roll angle");
+xlabel("time [s]"); ylabel("roll [deg]"); legend("EKF-roll","IMU-roll");
+xlim([ni,nf]*Ts_slk);
+
+subplot(3,1,2)
 plot(time(ni:nf),[theta_estim(ni:nf),IMU_pitch(ni:nf,2)]*180/pi,'LineWidth',1.3);
 grid on;
 ax = gca;
@@ -188,7 +161,7 @@ title("pitch angle");
 xlabel("time [s]"); ylabel("pitch [deg]"); legend("EKF-pitch","IMU-pitch");
 xlim([ni,nf]*Ts_slk);
 
-figure()
+subplot(3,1,3)
 plot(time(ni:nf),[psi_estim(ni:nf),IMU_yaw(ni:nf,2)]*180/pi,'LineWidth',1.3);
 grid on;
 ax = gca;
@@ -196,3 +169,131 @@ set(ax.XLabel, 'Interpreter', 'latex'); set(ax.YLabel, 'Interpreter', 'latex'); 
 title("yaw angle");
 xlabel("time [s]"); ylabel("yaw [deg]"); legend("EKF-yaw","IMU-yaw");
 xlim([ni,nf]*Ts_slk);
+
+%% Save the result
+close all;
+% ---------------------------------------------------------------------------------------------
+% Define the X and Y values
+ni = 50/Ts_slk;
+nf = 67/Ts_slk;
+x = time(ni:nf);
+% y = [phi_estim(ni:nf), IMU_roll(ni:nf,2)] * 180 / pi;
+% y = [theta_estim(ni:nf), IMU_pitch(ni:nf,2)] * 180 / pi;
+% y = [psi_estim(ni:nf), IMU_yaw(ni:nf,2)] * 180 / pi;
+% y = [phiRate_estim(ni:nf), IMU_roll_rate(ni:nf,2)] * 180 / pi;
+% y = [thetaRate_estim(ni:nf), IMU_pitch_rate(ni:nf,2)] * 180 / pi;
+y = [psiRate_estim(ni:nf), IMU_yaw_rate(ni:nf,2)] * 180 / pi;
+
+% ---------------------------------------------------------------------------------------------
+% Create the Figure
+fig = figure();
+% Set the background color
+fig.Color = [0.94, 0.94, 0.94]; % Grey-background, [1, 1, 1] White-background
+% Figure - Position and Size (Figure Properties)
+fig.Units = 'centimeters';
+fig.Position = [1, 1, 40, 6]; % [left, bottom, width, height]
+
+% ---------------------------------------------------------------------------------------------
+% Create the Plot
+p = plot(x,y);
+% Set the line width
+p(1).LineWidth = 1.3;
+p(2).LineWidth = 1.3;
+
+% ---------------------------------------------------------------------------------------------
+% Get the Current Axes (handle)
+ax = fig.CurrentAxes;
+
+% Axis - Appearence (NumericRuler Properties)
+% Set the Color of the axes
+ax.XAxis.Color = [0.15 0.15 0.15];
+ax.YAxis.Color = [0.15 0.15 0.15];
+% Set the Line Width of the axes
+ax.XAxis.LineWidth = 0.7;
+ax.YAxis.LineWidth = 0.7;
+% Set the Font Name of the axes (Ticks)
+ax.XAxis.FontName = 'Helvetica';
+ax.YAxis.FontName = 'Helvetica';
+% Set the Font Size of the axes (Ticks)
+ax.XAxis.FontSize = 14;
+ax.YAxis.FontSize = 14;
+
+% Axis - Labels (NumericRuler Properties)
+% Set the Interpreter of the axes' labes
+ax.XLabel.Interpreter = 'latex';
+ax.YLabel.Interpreter = 'latex';
+% Set the Font Name of the axes' labels
+ax.XAxis.FontName = 'Helvetica';
+ax.YAxis.FontName = 'Helvetica';
+% Set the Font size of the axes'labels
+ax.XAxis.Label.FontSize = 16;
+ax.YAxis.Label.FontSize = 16;
+% Set the Label of the axes
+ax.XAxis.Label.String = 'Time [\textit{s}]';
+ax.YAxis.Label.String = '$\dot{\psi}$ [\textit{deg/s}]';
+
+% Axis - Ticks (NumericRuler Properties)
+% Set the Ticks Values of the axes
+dXTick   = 1;
+dYTick   = 120;
+minX     = ceil(min(min(x)));
+maxX     = ceil(max(max(x)));
+minY     = floor(min(min(y)) - abs(min(min(y)))*0.02);
+maxY     = max(max(y));
+ax.XAxis.TickValues = minX:dXTick:maxX;
+ax.YAxis.TickValues = minY + (0:dYTick:ceil(abs(maxY-minY)/dYTick)*dYTick);
+% Set the Ticks Exponent
+ax.XAxis.Exponent = 0;  % The base value is always 10. However, you can change the exponent value by setting the Exponent property.
+ax.YAxis.Exponent = 0;  % If the exponent value is 0, then the exponent label does not display.
+  
+% Axis - Scale and Direction (NumericRuler Properties)
+% Set the Limits of the axes
+ax.XAxis.Limits = [min(ax.XTick), max(ax.XTick)];
+ax.YAxis.Limits = [min(ax.YTick), max(ax.YTick)];
+
+% Grids (Axes Properties) 
+% Set the Grid of the axes
+ax.XGrid = 'on';
+ax.YGrid = 'on'; 
+% Set the Grid Line Width
+ax.GridLineWidth = 1.0;
+% Set the Grid Color
+ax.GridColor = [0.15 0.15 0.15];
+
+% Title (Axes Properties) 
+% Set the interpreter to 'latex'
+ax.Title.Interpreter = 'latex';
+% Set the Font Name
+ax.Title.FontName = 'Helvetica';
+% Set the Font Size
+ax.Title.FontSize = 16;
+% Set the Title
+ax.Title.String = 'Yaw rate';
+
+% Box Styling (Axes Properties)
+% Set the background color of the area inside the plot 
+ax.Color = [1, 1, 1]; % White background
+% Turn the box off
+ax.Box = 'off';
+
+% ---------------------------------------------------------------------------------------------
+% Create the Legend
+lgd = legend("show");
+
+% Legend (Legend Properties)
+% Set the interpreter to 'latex'
+lgd.Interpreter = 'latex';
+% Set the Font Name
+lgd.FontName = 'Helvetica';
+% Set the Font Size
+lgd.FontSize = 9;
+% Set the Legend
+lgd.String = {'YawRate$_{EKF}$','YawRate$_{IMU}$'};
+% Set the location of the legend
+lgd.Location = 'northeast';
+% Turn the box on
+lgd.Box = 'on';
+
+% ---------------------------------------------------------------------------------------------
+% export the image
+exportgraphics(fig,"results_and_plots/plotYawRate2.jpg","Resolution",300);
