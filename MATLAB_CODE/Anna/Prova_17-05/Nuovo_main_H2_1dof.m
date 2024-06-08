@@ -42,7 +42,7 @@ load("system_lin0_1dof_new_Ixx");
 %% H2
 % rounding_n      =   3;                  % rounding at the nth decimal place
 % % Difm            =   di_fixed_modes(Alin,Blin,Clin,rounding_n);
-% [K,feas,ris]        =   H2_control_1dof(Alin,Blin,Clin,Dlin);
+%[K,feas,ris]        =   H2_control_1dof(Alin,Blin,Clin,Dlin);
 load("K_H2_1dof_new_Ixx")
 
 % % Transfer function between gamma and y
