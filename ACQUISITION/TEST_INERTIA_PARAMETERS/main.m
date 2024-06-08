@@ -18,23 +18,23 @@ directory = 'CLEAN_DATA/';
 filename = directory + filename;
 data = load(filename);
 data = data.filtered_data_table;
-% data = data(14450:14800 , :);
-% time = table2array(data(:,"time"));
-% roll = table2array(data(:,"Roll_rate"));
-% figure;
-% plot(time,roll);
-% hold on;
-% grid on;
-% offset = 49;
-% omega = 11;
-% plot(time, sin(omega*(time+offset)))
-% zero_roll = findZeroIndices(roll);
-% time_zero = getSubvectorByIndices(time,zero_roll);
-%% PLOT
-
-
-
-directory = "PLOTS";
-plotData(data, labels, directory)
-directory = "SUBPLOTS";
-plotData(data, labels,directory)
+data = data(14450:14800 , :);
+time = table2array(data(:,"time"));
+roll = table2array(data(:,"a_b_x"));
+figure;
+plot(time,roll);
+hold on;
+grid on;
+offset = 49;
+omega = 11;
+plot(time, 0.1*sin(omega*(time+offset)))
+zero_roll = findZeroIndices(roll);
+time_zero = getSubvectorByIndices(time,zero_roll);
+% %% PLOT
+% 
+% 
+% 
+% directory = "PLOTS";
+% plotData(data, labels, directory)
+% directory = "SUBPLOTS";
+% plotData(data, labels,directory)
