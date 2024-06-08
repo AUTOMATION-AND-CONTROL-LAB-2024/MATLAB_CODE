@@ -8,7 +8,7 @@ g           =       9.81;                   %  gravity acceleration (m/s^2)
 mf          =       [22602; 0; -42062;];    %  earth magnetic field (in inertia frame) (nT) (1nT = 10^-5 Gauss)
 
 %% extraction of dataset from Test_RPY_quaternion
-raw_data = load("RAW_DATA/Test_MOTOR_NOISE_000_700.mat");
+raw_data = load("RAW_DATA/Test_SENSORS_3.mat");
 dataset = table2array(raw_data.Acq_Data);   %variable name "Acq_data"
 [rows,colums] = size(dataset);
 
@@ -60,7 +60,7 @@ IMU_w_b_variance        = IMU_var_bias_matrix(:,3);         % variance in IMU an
 IMU_mf_b_variance       = ones(3,1)*0.001;                  % variance in IMU magnetic field measurement 
 
 %% RPY computation
-acc_pole                = 2;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
+acc_pole                = 10;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
 vel_pole                = 20;
 %% EKF2 parameters
 
@@ -71,13 +71,13 @@ Ts_EKF_meas        = 0.01;       % [s] Ts for measurement update
 % --------------------------------------------------------------------------------------------------------
 
 % RP_EKF
-q_ph        = 200e-0;                 % q-elements related to phi states
-q_th        = 200e-0;                 % q-elements related to theta states
-q_bias_w_b  = 1e-3;                 % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
+q_ph        = 630e-0;                 % q-elements related to phi states
+q_th        = 1300e-0;                 % q-elements related to theta states
+q_bias_w_b  = 1e-7;                 % q-elements related to bias_wp, bias_wq, bias_wr (bias of wp,wq,wr of angular velocity vector)
 Q_phth      = diag([q_ph,q_th,q_bias_w_b,q_bias_w_b,q_bias_w_b]);
 
-r_ph        = 800e-0;                 % variance related to phi computation from IMU measurement
-r_th        = 800e-0;                 % variance related to theta computation from IMU measurement
+r_ph        = 400e-0;                 % variance related to phi computation from IMU measurement
+r_th        = 900e-0;                 % variance related to theta computation from IMU measurement
 R_phth      = diag([r_ph,r_th]);
 
 ph0         = 0;                    % initial guess of phi angle
@@ -136,5 +136,15 @@ fprintf('pitch error: %.2f \n',theta_error);
 fprintf('yaw error:   %.2f \n',psi_error);
 fprintf('----------------------------------------- \n');
 
+%% Plots
+figure()
+sgtitle("EKF simulation");
+subplot(3,1,1)
+plot(time,[phi_estim(1:N),IMU_roll(1:N,2)*180/pi]);
+grid on;
+title("roll angle");
+xlabel("time [s]");
+ylabel(" roll [deg]");
+legend("EKF_roll","IMU_roll");
 
 

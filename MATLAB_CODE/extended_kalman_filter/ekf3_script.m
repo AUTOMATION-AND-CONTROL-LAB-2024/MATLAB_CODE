@@ -47,7 +47,7 @@ Ts_slk      =       0.01;           % sampling time (s)
 Tend_slk    =       IMU_Tend;       % simulation time (s)
 
 %% IMU parameter loading
-IMU_data = load("IMU_data.mat");
+IMU_data = load("IMUParameters.mat");
 IMU_var_bias_matrix = table2array(IMU_data.IMU_var_bias);      % need IMU_var_bias table
 clear IMU_data;
 
@@ -60,7 +60,8 @@ IMU_w_b_variance        = IMU_var_bias_matrix(:,3);         % variance in IMU an
 IMU_mf_b_variance       = ones(3,1)*0.001;                  % variance in IMU magnetic field measurement 
 
 %% RPY computation
-meas_pole               = 15;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
+acc_pole                = 15;                               % pole [Hz] of the high-pass-filter in input to the <RPY_computation> block
+vel_pole                = 10;
 
 %% rotation from IMU-frame to BODY-frame
 angleZ = pi/4;
