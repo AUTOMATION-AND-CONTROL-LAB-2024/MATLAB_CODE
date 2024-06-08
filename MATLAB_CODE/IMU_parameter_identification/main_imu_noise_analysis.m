@@ -65,27 +65,27 @@ firstHarmonic = 5;                                  % to see the 0Hz-harmonic : 
 
 % (3) plot the results
 figure()
-sgtitle("frequency-domain analysis");
+sgtitle("FREQUENCY DOMAIN NOISE ANALYSIS (FFT)");
 subplot(3,1,1);
 plot(freq{1,1}(firstHarmonic:end),magn{1,1}(firstHarmonic:end),"LineWidth",1);
-title(sprintf("component x: Magnitude of fft Spectrum"));
+title(sprintf("Component X: magnitude of FFT spectrum"));
 xlabel("f (Hz)");
-ylabel("|fft(spectrum)|");
+ylabel("|Spectrum|");
 xlim([0 Fs/2]); % Set the x-axis limits
 ylim([0 max(magn{1,1}(firstHarmonic:end))]); % Set the y-axis limits
 
 subplot(3,1,2);
 plot(freq{1,2}(firstHarmonic:end),magn{1,2}(firstHarmonic:end),"LineWidth",1);
-title(sprintf("component y: Magnitude of fft Spectrum"));
+title(sprintf("Component Y: magnitude of FFT spectrum"));
 xlabel("f (Hz)");
-ylabel("|fft(spectrum)|");
+ylabel("|Spectrum|");
 xlim([0 Fs/2]); % Set the x-axis limits
 ylim([0 max(magn{1,2}(firstHarmonic:end))]); % Set the y-axis limits
 
 subplot(3,1,3);
 plot(freq{1,3}(firstHarmonic:end),magn{1,3}(firstHarmonic:end),"LineWidth",1);
-title(sprintf("component z: Magnitude of fft Spectrum"));
+title(sprintf("Component Z: magnitude of FFT spectrum"));
 xlabel("f (Hz)");
-ylabel("|fft(spectrum)|");
+ylabel("|Spectrum|");
 xlim([0 Fs/2]); % Set the x-axis limits
 ylim([0 max(magn{1,3}(firstHarmonic:end))]); % Set the y-axis limits

@@ -6,6 +6,10 @@ from sklearn.preprocessing import PolynomialFeatures
 import numpy as np
 
 
+filename_linear = 'linear.xlsx'
+filename_poly = 'poly.xlsx'
+
+
 def read_data(filename, num_sheet):
     data = []
     for i in range(num_sheet):
@@ -62,14 +66,18 @@ def plot_motor_LR(data, ind):
     plt.plot(X_new, y_pred, color='red', label='Linear Regression')
     plt.xlabel('PWM')
     plt.ylabel('THRUST[N]')
-    plt.title('Poly coeff: '+str(K))
+    plt.title('RANSAC REGRESSOR')
     plt.grid()
+    return K[0]
 
 def plot_motor_array_LR(data):
     fig, axes = plt.subplots(2,2, constrained_layout=True)
+    list = []
     for ind, df in enumerate(data, start = 1):
-        plot_motor_LR(df, ind)
-    plt.show()
+        list.append(plot_motor_LR(df, ind))
+    #plt.show()
+    df = pd.DataFrame(list, columns = ['K'])
+    df.to_excel(filename_linear, index_label= False)
     fig.savefig('plots/motor_array_LR.png')
 
 def plot_motor_POLY(data, ind):
@@ -87,16 +95,21 @@ def plot_motor_POLY(data, ind):
     plt.plot(x_, y_pred, color='red', label='Linear Regression')
     plt.xlabel('PWM')
     plt.ylabel('THRUST[N]')
-    plt.title(str(K))
+    plt.title('POLYNOMIAL REGRESSOR')
     ax = plt.gca()
     ax.set_xlim([0,500])
     plt.grid()
+    print(K)
+    return K[0][0],K[0][1]
 
 def plot_motor_array_POLY(data):
     fig, axes = plt.subplots(2,2, constrained_layout=True)
+    list = []
     for ind, df in enumerate(data, start = 1):
-        plot_motor_POLY(df, ind)
-    plt.show()
+        list.append(plot_motor_POLY(df, ind))
+    #plt.show()
+    df = pd.DataFrame(list, columns = ['K0','K1'])
+    df.to_excel(filename_poly, index_label= False)
     fig.savefig('plots/motor_array_POLY.png')
 
 

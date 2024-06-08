@@ -10,10 +10,22 @@ y_ref    = Acq_Data.roll_ref(5500:7000);
 y_meas =  Acq_Data.Roll(5500:7000)+3.9*pi/180;
 data.time = t;
 data.signals.values = [y_ref, y_meas];
-% plot(t,y_ref)%,t);
+plot(t,y_ref)%,t);
 % grid("on")
 % hold("on")
-% plot(t,y_meas)
+plot(t,y_meas)
+
+%% Data parsing
+load('RAW_DATA/Test_H2_1dof_pitch_step.mat');
+t          = Acq_Data.time;%(5500:7000)-Acq_Data.time(5500);
+y_ref    = Acq_Data.roll_ref;%(5500:7000);
+y_meas =  -0.025-1*Acq_Data.Pitch;%(5000:7000)+3.9*pi/180;
+data.time = t;
+data.signals.values = [y_ref, y_meas];
+plot(t,y_ref)%,t);
+grid("on")
+hold("on")
+plot(t,y_meas)
 %% SYSTEM PARAMETERS
 Ixx         =   0.45;                  %  moment of inertia (kg*m^2)
 Ts_slk      =   0.001;
